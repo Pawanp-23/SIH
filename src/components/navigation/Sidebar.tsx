@@ -1,36 +1,43 @@
 import React, { useState } from 'react';
-import { ScreenId, UserProfile, UserRole } from '../../types.js';
+import { UserProfile } from '../../types.js';
 import {
   Shield,
-  ShieldAlert,
+  Heart,
   Activity,
   UserCheck,
   Stethoscope,
+  TrendingUp,
   Sliders,
   Cpu,
   Lock,
-  Heart,
-  Layers,
-  Wind,
-  BookOpen,
-  FileText,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Menu,
   Sparkles,
-  Compass,
-  RotateCcw,
-  Smartphone,
-  Monitor,
-  CheckCircle2
+  Wind,
+  BookOpen,
+  FileText,
+  Calendar,
+  ClipboardList,
+  AlertTriangle,
+  Flame,
+  Clock,
+  ShieldAlert,
+  Database,
+  TrendingDown,
+  FileCheck,
+  Key,
+  ChevronDown,
+  Layers
 } from 'lucide-react';
 
+export type RolePortalId = 'personnel' | 'welfare' | 'commander' | 'admin';
+
 interface SidebarProps {
-  currentScreen: ScreenId;
-  onSelectScreen: (screen: ScreenId) => void;
-  viewMode: 'intelligence_suite' | 'personnel_checkin';
-  onSelectViewMode: (mode: 'intelligence_suite' | 'personnel_checkin') => void;
+  activePortal: RolePortalId;
+  onSelectPortal: (portal: RolePortalId) => void;
+  activeSubTab?: string;
+  onSelectSubTab: (portal: RolePortalId, subTab: string) => void;
   currentUser: UserProfile | null;
   onSwitchUser: (userId: string) => void;
   onSignOut: () => void;
@@ -46,17 +53,17 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  currentScreen,
-  onSelectScreen,
-  viewMode,
-  onSelectViewMode,
+  activePortal,
+  onSelectPortal,
+  activeSubTab,
+  onSelectSubTab,
   currentUser,
   onSwitchUser,
   onSignOut,
   isCollapsed,
   onToggleCollapse,
-  criticalAlertsCount = 17,
-  openCasesCount = 2,
+  criticalAlertsCount = 3,
+  openCasesCount = 14,
   onOpenTacticalReset,
   onOpenWhoMethodology,
   onOpenExecutiveBrief,
@@ -64,106 +71,142 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenDemoGuide
 }) => {
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<Record<RolePortalId, boolean>>({
+    personnel: true,
+    welfare: true,
+    commander: true,
+    admin: true
+  });
 
-  const suiteScreens: Array<{
-    id: ScreenId;
-    label: string;
-    sublabel: string;
-    stepNumber: string;
-    badge?: string | number;
-    badgeColor?: string;
-    icon: React.ComponentType<{ className?: string }>;
-  }> = [
+  const toggleSection = (portal: RolePortalId) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [portal]: !prev[portal]
+    }));
+  };
+
+  // Hierarchical Role-Based Access Control (RBAC):
+  // 1. Personnel (Service Member): Can only view themself (1 portal: 'personnel')
+  // 2. Welfare Officer: Can view only 2 portals ('personnel' and 'welfare')
+  // 3. Commander: Can view all 3 portals ('personnel', 'welfare', 'commander')
+  // 4. Admin: Can view all 4 portals ('personnel', 'welfare', 'commander', 'admin')
+  const getAllowedPortals = (role?: string): RolePortalId[] => {
+    switch (role) {
+      case 'personnel':
+        return ['personnel'];
+      case 'welfare_officer':
+        return ['personnel', 'welfare'];
+      case 'command_viewer':
+        return ['personnel', 'welfare', 'commander'];
+      case 'admin':
+      case 'demo_operator':
+        return ['personnel', 'welfare', 'commander', 'admin'];
+      default:
+        return ['personnel'];
+    }
+  };
+
+  const allowedPortals = getAllowedPortals(currentUser?.role);
+
+  const portalConfigs = [
     {
-      id: 'command_overview',
-      label: 'Force Welfare Pulse',
-      sublabel: 'WHO Executive Telemetry',
-      stepNumber: '01',
-      badge: `${criticalAlertsCount} Alerts`,
-      badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
-      icon: ShieldAlert
-    },
-    {
-      id: 'unit_intelligence',
-      label: 'Unit Heatmap',
-      sublabel: 'Cohort Disaggregation',
-      stepNumber: '02',
-      icon: Activity
-    },
-    {
-      id: 'personnel_view',
-      label: 'Personnel & SHAP',
-      sublabel: 'Plain-English Attribution',
-      stepNumber: '03',
-      badge: 'Score 78',
-      badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-      icon: UserCheck
-    },
-    {
-      id: 'intervention_assistant',
-      label: 'Care Protocols',
-      sublabel: 'Evidence-Grounded RAG',
-      stepNumber: '04',
-      badge: `${openCasesCount} Active`,
-      badgeColor: 'bg-orange-500/20 text-orange-300 border-orange-500/30',
-      icon: Stethoscope
-    },
-    {
-      id: 'what_if_simulator',
-      label: 'Recovery Sandbox',
-      sublabel: 'What-If Duty Simulation',
-      stepNumber: '05',
-      badge: 'Sim',
-      badgeColor: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
-      icon: Sliders
-    },
-    {
-      id: 'model_monitoring',
-      label: 'Model Trust & Drift',
-      sublabel: 'Observability & Metrics',
-      stepNumber: '06',
-      badge: 'v1.2 OK',
-      badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-      icon: Cpu
-    },
-    {
-      id: 'audit_privacy',
-      label: 'Privacy Enclave',
-      sublabel: 'k ≥ 10 Anonymity Enforced',
-      stepNumber: '07',
+      id: 'personnel' as RolePortalId,
+      number: '01',
+      title: 'PERSONNEL PORTAL',
       badge: 'Protected',
-      badgeColor: 'bg-stone-500/20 text-stone-300 border-stone-500/30',
-      icon: Lock
+      badgeColor: 'bg-[#1d9f76]/20 text-[#0f7058] border-[#1d9f76]/30',
+      icon: Heart,
+      subItems: [
+        { id: 'checkin', label: 'Wellness check-in', icon: Calendar },
+        { id: 'wellbeing', label: 'My wellbeing', icon: TrendingUp },
+        { id: 'assessment', label: 'Assessment', icon: ClipboardList },
+        { id: 'recovery', label: 'Recovery recommendations', icon: Wind },
+        { id: 'assistance', label: 'Confidential assistance', icon: Sparkles },
+        { id: 'privacy', label: 'Privacy controls', icon: Lock }
+      ]
+    },
+    {
+      id: 'welfare' as RolePortalId,
+      number: '02',
+      title: 'WELFARE OFFICER',
+      badge: '3 Alerts',
+      badgeColor: 'bg-rose-500/20 text-rose-800 border-rose-500/30',
+      icon: Stethoscope,
+      subItems: [
+        { id: 'risk_overview', label: 'Risk overview', icon: Activity },
+        { id: 'alerts', label: 'Alerts', icon: AlertTriangle },
+        { id: 'profile', label: 'Personnel profile', icon: UserCheck },
+        { id: 'risk_history', label: 'Risk history', icon: TrendingUp },
+        { id: 'shap', label: 'SHAP explanation', icon: Sliders },
+        { id: 'recommendations', label: 'Recommendations', icon: BookOpen },
+        { id: 'interventions', label: 'Interventions', icon: Stethoscope }
+      ]
+    },
+    {
+      id: 'commander' as RolePortalId,
+      number: '03',
+      title: 'COMMANDER',
+      badge: 'k ≥ 10',
+      badgeColor: 'bg-[#1d9f76]/20 text-[#0f7058] border-[#1d9f76]/30',
+      icon: ShieldAlert,
+      subItems: [
+        { id: 'unit_readiness', label: 'Unit readiness', icon: Activity },
+        { id: 'aggregate_trends', label: 'Aggregate trends', icon: TrendingUp },
+        { id: 'workload', label: 'Workload', icon: Clock },
+        { id: 'deployment_stress', label: 'Deployment stress', icon: Flame },
+        { id: 'alerts', label: 'High-level alerts', icon: ShieldAlert },
+        { id: 'reports', label: 'Reports', icon: FileText }
+      ]
+    },
+    {
+      id: 'admin' as RolePortalId,
+      number: '04',
+      title: 'ADMIN / ML',
+      badge: 'Active',
+      badgeColor: 'bg-[#efa02a]/20 text-amber-900 border-[#efa02a]/30',
+      icon: Cpu,
+      subItems: [
+        { id: 'model_monitoring', label: 'Model monitoring', icon: Cpu },
+        { id: 'dataset_health', label: 'Dataset health', icon: Database },
+        { id: 'drift', label: 'Drift', icon: TrendingDown },
+        { id: 'accuracy', label: 'Accuracy', icon: Activity },
+        { id: 'feature_importance', label: 'Feature importance', icon: Sliders },
+        { id: 'audit_logs', label: 'Audit logs', icon: FileCheck },
+        { id: 'permissions', label: 'Permissions', icon: Key }
+      ]
     }
   ];
+
+  // Strictly filter only portals permitted for this authenticated role
+  const visiblePortalConfigs = portalConfigs.filter((p) => allowedPortals.includes(p.id));
 
   return (
     <aside
       id="dashboard-sidebar"
-      className={`bg-slate-950 text-slate-200 border-r border-slate-800/90 flex flex-col justify-between shrink-0 transition-all duration-300 relative select-none z-30 h-screen sticky top-0 ${
-        isCollapsed ? 'w-20' : 'w-72'
+      className={`bg-[#E3DDCF] text-[#1E1E1E] border-r border-[#D2CBBB] flex flex-col justify-between shrink-0 transition-all duration-300 relative select-none z-30 h-screen sticky top-0 shadow-sm ${
+        isCollapsed ? 'w-20' : 'w-80'
       }`}
     >
       {/* Top Header & Branding */}
       <div className="flex flex-col shrink-0">
-        <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
+        <div className="p-4 border-b border-[#D2CBBB] flex items-center justify-between">
           <div
             onClick={onOpenLandingPage}
             className={`flex items-center space-x-3 cursor-pointer group ${isCollapsed ? 'justify-center w-full' : ''}`}
             title="Return to SAHARA Overview"
           >
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-orange-500/30 to-amber-600/20 border border-orange-500/40 flex items-center justify-center text-orange-400 group-hover:border-orange-400 transition-all shadow-md shadow-orange-950/40 shrink-0">
-              <Shield className="w-5 h-5 text-orange-400 group-hover:scale-105 transition-transform" />
+            <div className="w-10 h-10 rounded-2xl bg-[#1d9f76]/20 border border-[#1d9f76]/30 flex items-center justify-center text-[#0f7058] group-hover:bg-[#1d9f76]/30 transition-all shadow-xs shrink-0">
+              <Shield className="w-5 h-5 text-[#0f7058] group-hover:scale-105 transition-transform" />
             </div>
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center space-x-2">
-                  <span className="font-extrabold text-base tracking-tight text-white font-serif">SAHARA</span>
-                  <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30">
-                    Live
+                  <span className="font-extrabold text-base tracking-tight text-[#1E1E1E] font-serif">SAHARA</span>
+                  <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-full bg-[#1d9f76]/20 text-[#0f7058] border border-[#1d9f76]/30 font-bold">
+                    Armed Forces
                   </span>
                 </div>
-                <span className="text-[10px] text-slate-400 truncate">Welfare &amp; Readiness</span>
+                <span className="text-[10px] text-[#5E5A52] truncate">Health &amp; Welfare Platform</span>
               </div>
             )}
           </div>
@@ -172,7 +215,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               id="btn-collapse-sidebar"
               onClick={onToggleCollapse}
-              className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+              className="p-1.5 rounded-xl bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#5E5A52] hover:text-[#1E1E1E] border border-[#D2CBBB] transition-colors cursor-pointer"
               title="Collapse Sidebar"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -182,11 +225,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Collapsed expand button */}
         {isCollapsed && (
-          <div className="p-2 border-b border-slate-800/80 flex justify-center">
+          <div className="p-2 border-b border-[#D2CBBB] flex justify-center">
             <button
               id="btn-expand-sidebar"
               onClick={onToggleCollapse}
-              className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors cursor-pointer"
+              className="p-1.5 rounded-xl bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#5E5A52] hover:text-[#1E1E1E] border border-[#D2CBBB] transition-colors cursor-pointer"
               title="Expand Sidebar"
             >
               <ChevronRight className="w-4 h-4" />
@@ -194,330 +237,244 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         )}
 
-        {/* Mode Switcher: Command & Care vs Service Member */}
-        <div className="p-3 border-b border-slate-800/60 bg-slate-900/40">
-          {!isCollapsed ? (
-            <div className="space-y-1">
-              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 px-1 mb-1 font-semibold">
-                Operating Workspace
-              </div>
-              <div className="grid grid-cols-2 gap-1.5 bg-slate-950 p-1 rounded-2xl border border-slate-800/90 shadow-inner">
-                <button
-                  id="btn-sidebar-mode-suite"
-                  onClick={() => onSelectViewMode('intelligence_suite')}
-                  className={`px-2 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex flex-col items-center justify-center text-center select-none ${
-                    viewMode === 'intelligence_suite'
-                      ? 'bg-orange-500 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                  }`}
-                >
-                  <Layers className="w-3.5 h-3.5 mb-0.5" />
-                  <span className="text-[11px] leading-tight">Command Suite</span>
-                </button>
-                <button
-                  id="btn-sidebar-mode-checkin"
-                  onClick={() => onSelectViewMode('personnel_checkin')}
-                  className={`px-2 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex flex-col items-center justify-center text-center select-none ${
-                    viewMode === 'personnel_checkin'
-                      ? 'bg-orange-500 text-white shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                  }`}
-                >
-                  <Heart className="w-3.5 h-3.5 mb-0.5" />
-                  <span className="text-[11px] leading-tight">Daily Check-In</span>
-                </button>
-              </div>
+        {/* Role Quick Selector / Switcher */}
+        {!isCollapsed && (
+          <div className="p-3 border-b border-[#D2CBBB] bg-[#F4EFE4]/60">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#5E5A52] px-1 mb-1.5 font-bold flex items-center justify-between">
+              <span>{visiblePortalConfigs.length > 1 ? 'Authorized Portals' : 'Clearance Scope'}</span>
+              <span className="text-[10px] text-[#0f7058] font-bold">
+                {visiblePortalConfigs.length} {visiblePortalConfigs.length === 1 ? 'Portal (Self)' : 'Portals'}
+              </span>
             </div>
-          ) : (
-            <div className="flex flex-col items-center space-y-2">
-              <button
-                onClick={() => onSelectViewMode('intelligence_suite')}
-                className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all cursor-pointer ${
-                  viewMode === 'intelligence_suite'
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'bg-slate-900 text-slate-400 hover:text-white'
-                }`}
-                title="Command & Care Suite"
-              >
-                <Layers className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => onSelectViewMode('personnel_checkin')}
-                className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all cursor-pointer ${
-                  viewMode === 'personnel_checkin'
-                    ? 'bg-orange-500 text-white shadow-md'
-                    : 'bg-slate-900 text-slate-400 hover:text-white'
-                }`}
-                title="Service Member Daily Check-In"
-              >
-                <Heart className="w-5 h-5" />
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Main Navigation List */}
-      <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
-        {/* Command & Care Suite Screens */}
-        {viewMode === 'intelligence_suite' ? (
-          <div>
-            {!isCollapsed && (
-              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 px-2 mb-2 font-semibold flex items-center justify-between">
-                <span>Intelligence Screens (7)</span>
-                <span className="text-[9px] text-orange-400">Tactical</span>
-              </div>
-            )}
-            <div className="space-y-1">
-              {suiteScreens.map((screen) => {
-                const Icon = screen.icon;
-                const isActive = currentScreen === screen.id;
-                return (
+            {visiblePortalConfigs.length > 1 ? (
+              <div className={`grid ${visiblePortalConfigs.length === 2 ? 'grid-cols-2' : visiblePortalConfigs.length === 3 ? 'grid-cols-3' : 'grid-cols-2'} gap-1.5`}>
+                {visiblePortalConfigs.map((p) => (
                   <button
-                    key={screen.id}
-                    id={`sidebar-screen-${screen.id}`}
-                    onClick={() => onSelectScreen(screen.id)}
-                    className={`w-full text-left rounded-2xl transition-all cursor-pointer flex items-center ${
-                      isCollapsed ? 'justify-center p-3' : 'p-2.5 space-x-3'
-                    } ${
-                      isActive
-                        ? 'bg-slate-800/90 text-white border border-slate-700/80 shadow-xs'
-                        : 'text-slate-400 hover:bg-slate-900/80 hover:text-slate-200 border border-transparent'
+                    key={p.id}
+                    onClick={() => onSelectPortal(p.id)}
+                    className={`px-2 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center space-x-1 border ${
+                      activePortal === p.id
+                        ? 'bg-[#1d9f76] text-white border-[#1d9f76] shadow-xs'
+                        : 'bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#1E1E1E] border-[#D2CBBB]'
                     }`}
-                    title={isCollapsed ? `${screen.label} (${screen.stepNumber})` : undefined}
                   >
-                    <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                        isActive
-                          ? 'bg-orange-500 text-white shadow-xs'
-                          : 'bg-slate-900 text-slate-400 group-hover:text-slate-300'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </div>
-
-                    {!isCollapsed && (
-                      <div className="flex-1 min-w-0 flex items-center justify-between">
-                        <div className="truncate">
-                          <div className="flex items-center space-x-1.5">
-                            <span className="text-[10px] font-mono text-slate-400">{screen.stepNumber}</span>
-                            <span className="text-xs font-bold truncate text-slate-100">{screen.label}</span>
-                          </div>
-                          <div className="text-[10px] text-slate-400 truncate">{screen.sublabel}</div>
-                        </div>
-                        {screen.badge && (
-                          <span
-                            className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ml-1.5 ${
-                              screen.badgeColor || 'bg-slate-800 text-slate-300 border-slate-700'
-                            }`}
-                          >
-                            {screen.badge}
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    <p.icon className="w-3.5 h-3.5 shrink-0" />
+                    <span className="truncate text-[10px]">{p.number} {p.id.charAt(0).toUpperCase() + p.id.slice(1)}</span>
                   </button>
-                );
-              })}
-            </div>
-          </div>
-        ) : (
-          /* Service Member Navigation */
-          <div>
-            {!isCollapsed && (
-              <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 px-2 mb-2 font-semibold">
-                Member Wellness Portal
+                ))}
+              </div>
+            ) : (
+              <div className="px-2.5 py-1.5 rounded-xl bg-[#E3DDCF] border border-[#D2CBBB] text-[11px] font-semibold text-[#0f7058] flex items-center space-x-2">
+                <Heart className="w-3.5 h-3.5 text-[#1d9f76]" />
+                <span className="truncate">Tier 1: Personal Records Only</span>
               </div>
             )}
-            <div className="space-y-1">
-              <button
-                onClick={() => onSelectViewMode('personnel_checkin')}
-                className={`w-full text-left rounded-2xl p-3 flex items-center ${
-                  isCollapsed ? 'justify-center' : 'space-x-3'
-                } bg-slate-800/90 text-white border border-slate-700/80 shadow-xs`}
-              >
-                <div className="w-8 h-8 rounded-xl bg-orange-500 text-white flex items-center justify-center shrink-0">
-                  <Heart className="w-4 h-4" />
-                </div>
-                {!isCollapsed && (
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-slate-100">Daily Health Reflection</div>
-                    <div className="text-[10px] text-slate-400">Sleep, fatigue &amp; stress log</div>
-                  </div>
-                )}
-              </button>
-            </div>
           </div>
         )}
-
-        {/* Quick Supportive Clinical Tools */}
-        <div>
-          {!isCollapsed && (
-            <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400 px-2 mb-2 font-semibold">
-              Supportive Protocols
-            </div>
-          )}
-          <div className="space-y-1">
-            {/* Tactical Reset Breathing */}
-            <button
-              id="sidebar-btn-breathing"
-              onClick={onOpenTacticalReset}
-              className={`w-full text-left rounded-2xl transition-all cursor-pointer flex items-center ${
-                isCollapsed ? 'justify-center p-3' : 'p-2.5 space-x-3'
-              } text-slate-400 hover:bg-slate-900/80 hover:text-orange-300`}
-              title="1-Min Guided Breathing Reset"
-            >
-              <div className="w-8 h-8 rounded-xl bg-slate-900 text-orange-400 border border-slate-800 flex items-center justify-center shrink-0">
-                <Wind className="w-4 h-4" />
-              </div>
-              {!isCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-200">1-Min Tactical Reset</div>
-                  <div className="text-[10px] text-slate-400">Guided box breathing ritual</div>
-                </div>
-              )}
-            </button>
-
-            {/* WHO Methodology */}
-            <button
-              id="sidebar-btn-methodology"
-              onClick={onOpenWhoMethodology}
-              className={`w-full text-left rounded-2xl transition-all cursor-pointer flex items-center ${
-                isCollapsed ? 'justify-center p-3' : 'p-2.5 space-x-3'
-              } text-slate-400 hover:bg-slate-900/80 hover:text-slate-200`}
-              title="WHO GDHM Health Standards"
-            >
-              <div className="w-8 h-8 rounded-xl bg-slate-900 text-slate-300 border border-slate-800 flex items-center justify-center shrink-0">
-                <BookOpen className="w-4 h-4" />
-              </div>
-              {!isCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-200">WHO Methodology</div>
-                  <div className="text-[10px] text-slate-400">GDHM 4-Pillar framework</div>
-                </div>
-              )}
-            </button>
-
-            {/* Executive Intelligence Brief */}
-            <button
-              id="sidebar-btn-exec-brief"
-              onClick={onOpenExecutiveBrief}
-              className={`w-full text-left rounded-2xl transition-all cursor-pointer flex items-center ${
-                isCollapsed ? 'justify-center p-3' : 'p-2.5 space-x-3'
-              } text-slate-400 hover:bg-slate-900/80 hover:text-slate-200`}
-              title="Export Executive Brief"
-            >
-              <div className="w-8 h-8 rounded-xl bg-slate-900 text-teal-400 border border-slate-800 flex items-center justify-center shrink-0">
-                <FileText className="w-4 h-4" />
-              </div>
-              {!isCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-200">Executive Brief</div>
-                  <div className="text-[10px] text-slate-400">Sector printout &amp; summary</div>
-                </div>
-              )}
-            </button>
-
-            {/* Overview & Workflow Guide */}
-            <button
-              id="sidebar-btn-landing"
-              onClick={onOpenLandingPage}
-              className={`w-full text-left rounded-2xl transition-all cursor-pointer flex items-center ${
-                isCollapsed ? 'justify-center p-3' : 'p-2.5 space-x-3'
-              } text-slate-400 hover:bg-slate-900/80 hover:text-emerald-300`}
-              title="Return to Interactive Workflow Guide"
-            >
-              <div className="w-8 h-8 rounded-xl bg-slate-900 text-emerald-400 border border-slate-800 flex items-center justify-center shrink-0">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              {!isCollapsed && (
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-200">Workflow Guide</div>
-                  <div className="text-[10px] text-slate-400">Interactive 4-step explainer</div>
-                </div>
-              )}
-            </button>
-          </div>
-        </div>
       </div>
 
-      {/* Bottom Corner: User Clearance & Dedicated Sign Out / Log Out */}
-      <div className="p-3 border-t border-slate-800/90 bg-slate-900/60 shrink-0">
-        {!isCollapsed ? (
-          <div className="space-y-2.5">
-            {/* User Details Card */}
-            <div className="p-2.5 rounded-2xl bg-slate-950 border border-slate-800/90 flex items-center justify-between">
-              <div className="flex items-center space-x-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-orange-500/20 border border-orange-500/40 text-orange-400 flex items-center justify-center font-bold text-xs shrink-0">
-                  {currentUser?.name ? currentUser.name.charAt(0) : 'U'}
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-white truncate">
-                    {currentUser?.name || 'Authorized Member'}
+      {/* Main Navigation List: Filtered strictly by Active Role Permissions */}
+      <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-4 scrollbar-thin scrollbar-thumb-[#D2CBBB]">
+        {visiblePortalConfigs.map((portal) => {
+          const isCurrentPortal = activePortal === portal.id;
+          const isExpanded = isCollapsed ? false : expandedSections[portal.id];
+          const Icon = portal.icon;
+
+          return (
+            <div
+              key={portal.id}
+              className={`rounded-2xl border transition-all ${
+                isCurrentPortal
+                  ? 'border-[#1d9f76]/40 bg-[#F4EFE4] shadow-xs'
+                  : 'border-transparent hover:border-[#D2CBBB]'
+              }`}
+            >
+              {/* Role Header Button */}
+              <button
+                onClick={() => {
+                  onSelectPortal(portal.id);
+                  if (!isCollapsed && !expandedSections[portal.id]) {
+                    toggleSection(portal.id);
+                  }
+                }}
+                className={`w-full text-left p-2.5 rounded-2xl flex items-center transition-all cursor-pointer ${
+                  isCollapsed ? 'justify-center' : 'justify-between'
+                } ${
+                  isCurrentPortal
+                    ? 'bg-[#1d9f76] text-white'
+                    : 'text-[#1E1E1E] hover:bg-[#F4EFE4]'
+                }`}
+                title={isCollapsed ? `${portal.number} ${portal.title}` : undefined}
+              >
+                <div className="flex items-center space-x-2.5 min-w-0">
+                  <div
+                    className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                      isCurrentPortal
+                        ? 'bg-white/20 text-white'
+                        : 'bg-[#E3DDCF] text-[#5E5A52]'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
                   </div>
-                  <div className="text-[10px] text-slate-400 truncate">
-                    {currentUser?.rank || 'Personnel'} &bull; {currentUser?.role || 'Active'}
+                  {!isCollapsed && (
+                    <div className="truncate">
+                      <div className="flex items-center space-x-1.5">
+                        <span className={`text-[10px] font-mono font-bold ${isCurrentPortal ? 'text-white/80' : 'text-[#0f7058]'}`}>
+                          {portal.number}
+                        </span>
+                        <span className="text-xs font-bold truncate">
+                          {portal.title}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {!isCollapsed && (
+                  <span
+                    className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border shrink-0 ${
+                      isCurrentPortal
+                        ? 'bg-white/20 text-white border-white/30'
+                        : portal.badgeColor
+                    }`}
+                  >
+                    {portal.badge}
+                  </span>
+                )}
+              </button>
+
+              {/* Sub-Items Tree (when expanded and not collapsed) */}
+              {!isCollapsed && isExpanded && (
+                <div className="px-2 py-1.5 space-y-0.5 border-t border-[#D2CBBB]/60 mt-1">
+                  {portal.subItems.map((sub, idx) => {
+                    const isSubActive = isCurrentPortal && activeSubTab === sub.id;
+                    const SubIcon = sub.icon;
+                    const isLast = idx === portal.subItems.length - 1;
+
+                    return (
+                      <button
+                        key={sub.id}
+                        onClick={() => {
+                          onSelectPortal(portal.id);
+                          onSelectSubTab(portal.id, sub.id);
+                        }}
+                        className={`w-full text-left py-1.5 px-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer flex items-center space-x-2 ${
+                          isSubActive
+                            ? 'bg-[#1d9f76]/15 text-[#0f7058] font-bold border border-[#1d9f76]/30'
+                            : 'text-[#5E5A52] hover:text-[#1E1E1E] hover:bg-[#E3DDCF]'
+                        }`}
+                      >
+                        <span className="font-mono text-[10px] text-[#5E5A52] opacity-70">
+                          {isLast ? '└──' : '├──'}
+                        </span>
+                        <SubIcon className={`w-3.5 h-3.5 shrink-0 ${isSubActive ? 'text-[#0f7058]' : 'text-[#5E5A52]'}`} />
+                        <span className="truncate">{sub.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Supportive Protocols Quick Access */}
+        {!isCollapsed && (
+          <div className="pt-2 border-t border-[#D2CBBB]/70 space-y-1">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[#5E5A52] px-2 mb-1 font-bold">
+              Supportive Protocols
+            </div>
+
+            <button
+              onClick={onOpenTacticalReset}
+              className="w-full text-left py-1.5 px-2.5 rounded-xl text-xs font-semibold text-[#1E1E1E] hover:bg-[#F4EFE4] flex items-center space-x-2 transition-colors cursor-pointer"
+            >
+              <Wind className="w-3.5 h-3.5 text-[#efa02a]" />
+              <span>1-Min Box Breathing Reset</span>
+            </button>
+
+            <button
+              onClick={onOpenWhoMethodology}
+              className="w-full text-left py-1.5 px-2.5 rounded-xl text-xs font-semibold text-[#1E1E1E] hover:bg-[#F4EFE4] flex items-center space-x-2 transition-colors cursor-pointer"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-[#5E5A52]" />
+              <span>WHO GDHM Methodology</span>
+            </button>
+
+            <button
+              onClick={onOpenExecutiveBrief}
+              className="w-full text-left py-1.5 px-2.5 rounded-xl text-xs font-semibold text-[#1E1E1E] hover:bg-[#F4EFE4] flex items-center space-x-2 transition-colors cursor-pointer"
+            >
+              <FileText className="w-3.5 h-3.5 text-[#0f7058]" />
+              <span>Executive Brief Dossier</span>
+            </button>
+
+            <button
+              onClick={onOpenLandingPage}
+              className="w-full text-left py-1.5 px-2.5 rounded-xl text-xs font-semibold text-[#1E1E1E] hover:bg-[#F4EFE4] flex items-center space-x-2 transition-colors cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-[#1d9f76]" />
+              <span>Landing Page &amp; Overview</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom Corner: Dedicated Sign Out / Log Out Option with Confirmation */}
+      <div className="p-3 border-t border-[#D2CBBB] bg-[#F4EFE4] shrink-0">
+        {!isCollapsed ? (
+          <div className="space-y-2">
+            {/* User Details Card */}
+            <div className="p-2.5 rounded-2xl bg-[#E3DDCF] border border-[#D2CBBB] flex items-center justify-between">
+              <div className="flex items-center space-x-2.5 min-w-0">
+                <div className="w-7 h-7 rounded-xl bg-[#1d9f76]/20 text-[#0f7058] flex items-center justify-center font-bold text-xs shrink-0">
+                  {currentUser?.name?.charAt(0) || 'P'}
+                </div>
+                <div className="truncate">
+                  <div className="text-xs font-bold text-[#1E1E1E] truncate">{currentUser?.name}</div>
+                  <div className="text-[10px] text-[#5E5A52] truncate font-mono">
+                    {currentUser?.rank} &bull; {currentUser?.unit}
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Quick Switch Clearance Select */}
-            <div className="flex items-center bg-slate-950 border border-slate-800 rounded-xl px-2 py-1">
-              <span className="text-[9px] uppercase font-mono text-slate-400 mr-2 shrink-0">Role:</span>
-              <select
-                id="sidebar-role-select"
-                value={currentUser?.id || 'p-014'}
-                onChange={(e) => onSwitchUser(e.target.value)}
-                className="bg-transparent text-[11px] font-medium text-slate-200 border-none p-0 focus:ring-0 focus:outline-none cursor-pointer w-full"
+            {/* Prominent Sign Out / Log Out Button in Corner */}
+            {!showSignOutConfirm ? (
+              <button
+                id="btn-sidebar-signout"
+                onClick={() => setShowSignOutConfirm(true)}
+                className="w-full py-2 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-2xs"
+                title="Sign Out / Log Out of Session"
               >
-                <optgroup label="Service Personnel">
-                  <option value="p-014" className="bg-slate-900 text-slate-100">
-                    Const. Rajesh Verma (102nd)
-                  </option>
-                  <option value="p-008" className="bg-slate-900 text-slate-100">
-                    L/Nk Amit Sharma (102nd)
-                  </option>
-                  <option value="p-022" className="bg-slate-900 text-slate-100">
-                    Hav. Manoj Rao (102nd)
-                  </option>
-                </optgroup>
-                <optgroup label="Welfare Officers">
-                  <option value="wo-kumar" className="bg-slate-900 text-slate-100">
-                    Sub. Arjun Kumar (Welfare)
-                  </option>
-                </optgroup>
-                <optgroup label="Commanders">
-                  <option value="cmd-singh" className="bg-slate-900 text-slate-100">
-                    Col. Harpreet Singh (Cmd)
-                  </option>
-                </optgroup>
-              </select>
-            </div>
-
-            {/* Explicit Sign Out / Log Out Button in Corner */}
-            <button
-              id="btn-sidebar-signout"
-              onClick={onSignOut}
-              className="w-full py-2 px-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 hover:text-rose-200 border border-rose-500/30 text-xs font-semibold flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-2xs"
-            >
-              <LogOut className="w-3.5 h-3.5 text-rose-400" />
-              <span>Sign Out / Log Out</span>
-            </button>
+                <LogOut className="w-3.5 h-3.5 text-rose-600" />
+                <span>Sign Out / Log Out</span>
+              </button>
+            ) : (
+              <div className="p-2 bg-rose-50 rounded-xl border border-rose-200 text-center space-y-1.5 animate-fadeIn">
+                <span className="text-[11px] font-bold text-rose-800 block">Sign out of session?</span>
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    onClick={onSignOut}
+                    className="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold cursor-pointer"
+                  >
+                    Confirm Sign Out
+                  </button>
+                  <button
+                    onClick={() => setShowSignOutConfirm(false)}
+                    className="px-2.5 py-1 rounded-lg bg-[#E3DDCF] text-[#5E5A52] text-xs font-medium cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
-          /* Collapsed User & Logout Icon */
-          <div className="flex flex-col items-center space-y-2">
-            <div
-              className="w-9 h-9 rounded-2xl bg-orange-500/20 border border-orange-500/40 text-orange-400 flex items-center justify-center font-bold text-xs"
-              title={`${currentUser?.name} (${currentUser?.rank})`}
-            >
-              {currentUser?.name ? currentUser.name.charAt(0) : 'U'}
-            </div>
+          <div className="flex flex-col items-center">
             <button
-              id="btn-sidebar-signout-collapsed"
               onClick={onSignOut}
-              className="w-9 h-9 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 hover:text-rose-300 border border-rose-500/30 flex items-center justify-center transition-all cursor-pointer"
+              className="w-10 h-10 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
               title="Sign Out / Log Out"
             >
               <LogOut className="w-4 h-4" />

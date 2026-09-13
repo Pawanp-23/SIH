@@ -50,20 +50,22 @@ export const Header: React.FC<HeaderProps> = ({
   const getRoleBadge = (role?: string) => {
     switch (role) {
       case 'personnel':
-        return { tag: 'Service Member', color: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' };
+        return { tag: '01 Service Member', color: 'bg-[#1d9f76]/20 text-[#0f7058] border-[#1d9f76]/30' };
       case 'welfare_officer':
-        return { tag: 'Welfare Officer', color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' };
+        return { tag: '02 Welfare Officer', color: 'bg-[#efa02a]/20 text-amber-900 border-[#efa02a]/30' };
       case 'command_viewer':
-        return { tag: 'Command Staff', color: 'bg-sky-500/20 text-sky-300 border-sky-500/30' };
+        return { tag: '03 Command Staff', color: 'bg-[#1d9f76]/20 text-[#0f7058] border-[#1d9f76]/30' };
+      case 'admin':
+        return { tag: '04 Admin / ML', color: 'bg-stone-500/20 text-[#1E1E1E] border-stone-500/30' };
       default:
-        return { tag: 'Standard Access', color: 'bg-slate-800 text-slate-300 border-slate-700' };
+        return { tag: 'Standard Access', color: 'bg-[#E3DDCF] text-[#1E1E1E] border-[#D2CBBB]' };
     }
   };
 
   const roleMeta = getRoleBadge(currentUser?.role);
 
   return (
-    <header id="sahara-header" className="bg-slate-900 text-slate-100 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md">
+    <header id="sahara-header" className="bg-[#E3DDCF] text-[#1E1E1E] border-b border-[#D2CBBB] sticky top-0 z-40 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
           {/* Left: Sidebar Toggle + Logo & Platform Context */}
@@ -72,186 +74,136 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 id="btn-header-sidebar-toggle"
                 onClick={onToggleSidebar}
-                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700/80 transition-all cursor-pointer mr-1"
+                className="p-2 rounded-xl bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#1E1E1E] border border-[#D2CBBB] transition-all cursor-pointer mr-1"
                 title={isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
               >
                 {isSidebarCollapsed ? (
-                  <PanelLeftOpen className="w-4 h-4 text-orange-400" />
+                  <PanelLeftOpen className="w-4 h-4 text-[#1d9f76]" />
                 ) : (
-                  <PanelLeftClose className="w-4 h-4 text-slate-300" />
+                  <PanelLeftClose className="w-4 h-4 text-[#5E5A52]" />
                 )}
               </button>
             )}
 
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-orange-500/30 to-amber-600/30 border border-orange-500/40 flex items-center justify-center text-orange-400 shadow-xs">
-              <Shield className="w-5 h-5 text-orange-400" />
+            <div
+              onClick={onOpenLandingPage}
+              className="w-9 h-9 rounded-2xl bg-[#1d9f76]/20 border border-[#1d9f76]/30 flex items-center justify-center text-[#0f7058] shadow-xs cursor-pointer hover:bg-[#1d9f76]/30 transition-colors"
+            >
+              <Shield className="w-5 h-5 text-[#0f7058]" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-[16px] tracking-tight text-white font-serif">SAHARA</span>
-                <span className="h-3 w-px bg-slate-700 hidden sm:inline-block" />
-                <span className="text-[11px] text-slate-300 hidden sm:inline-block font-medium">
+                <span
+                  onClick={onOpenLandingPage}
+                  className="font-extrabold text-[16px] tracking-tight text-[#1E1E1E] font-serif cursor-pointer hover:text-[#0f7058] transition-colors"
+                >
+                  SAHARA
+                </span>
+                <span className="h-3 w-px bg-[#D2CBBB] hidden sm:inline-block" />
+                <span className="text-[11px] text-[#5E5A52] hidden sm:inline-block font-medium">
                   Health &amp; Welfare Intelligence
                 </span>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="text-[11px] text-orange-300 font-medium">
+                <span className="text-[11px] text-[#0f7058] font-medium">
                   {currentUser?.unit || '102nd Mountain Battalion'}
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono">&bull; Section 14 Enclave</span>
+                <span className="text-[10px] text-[#5E5A52] font-mono hidden md:inline-block">
+                  &bull; {currentUser?.rank || 'Capt'} {currentUser?.name}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Center / Action Pills: Headspace & WHO Highlights */}
-          <div className="hidden lg:flex items-center gap-2">
-            {/* 1-Min Tactical Reset (Headspace inspiration) */}
+          {/* Right: Quick Action Controls & Sign Out in corner */}
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            {/* Quick 1-Min Reset */}
             {onOpenTacticalReset && (
               <button
-                id="btn-open-tactical-reset"
+                id="btn-header-tactical-reset"
                 onClick={onOpenTacticalReset}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/40 transition-all cursor-pointer shadow-xs"
-                title="Open 60-second guided box breathing decompression"
+                className="hidden md:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#efa02a] hover:bg-[#efa02a]/90 text-slate-900 border border-[#efa02a] text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                title="1-Minute Guided Box Breathing"
               >
-                <Wind className="w-3.5 h-3.5 text-orange-400" />
+                <Wind className="w-3.5 h-3.5 text-slate-900" />
                 <span>1-Min Reset</span>
               </button>
             )}
 
-            {/* WHO Indicator Methodology */}
+            {/* WHO Methodology */}
             {onOpenWhoMethodology && (
               <button
-                id="btn-open-who-methodology"
+                id="btn-header-who-methodology"
                 onClick={onOpenWhoMethodology}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all cursor-pointer"
-                title="WHO Global Health Data indicator definitions & formulations"
+                className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#1E1E1E] border border-[#D2CBBB] text-xs font-medium transition-colors cursor-pointer"
+                title="WHO GDHM 4-Pillar Health Standards"
               >
-                <BookOpen className="w-3.5 h-3.5 text-blue-400" />
-                <span>Indicator Guide</span>
+                <BookOpen className="w-3.5 h-3.5 text-[#5E5A52]" />
+                <span>WHO GDHM</span>
               </button>
             )}
 
-            {/* Executive Intelligence Brief */}
+            {/* Executive Dossier */}
             {onOpenExecutiveBrief && (
               <button
-                id="btn-open-exec-brief"
+                id="btn-header-executive-brief"
                 onClick={onOpenExecutiveBrief}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all cursor-pointer"
-                title="View and print WHO-standard Sector Executive Brief"
+                className="hidden lg:flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#1E1E1E] border border-[#D2CBBB] text-xs font-medium transition-colors cursor-pointer"
+                title="Export Executive Dossier"
               >
-                <FileText className="w-3.5 h-3.5 text-teal-400" />
-                <span>Executive Brief</span>
+                <FileText className="w-3.5 h-3.5 text-[#0f7058]" />
+                <span>Dossier</span>
               </button>
             )}
 
-            {/* Return to Landing Page / Workflow Guide */}
-            {onOpenLandingPage && (
-              <button
-                id="btn-open-landing-overview"
-                onClick={onOpenLandingPage}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 transition-all cursor-pointer"
-                title="Explore interactive landing page and system workflow"
-              >
-                <Shield className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Overview &amp; Workflow</span>
-              </button>
-            )}
-          </div>
+            {/* Authenticated User Identity & Clearance Badge */}
+            <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#F4EFE4] border border-[#D2CBBB] text-xs">
+              <div className="w-2 h-2 rounded-full bg-[#1d9f76]" />
+              <span className="font-bold text-[#1E1E1E] truncate max-w-[130px] sm:max-w-[180px]">
+                {currentUser?.rank} {currentUser?.name}
+              </span>
+              <span className="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#E3DDCF] text-[#5E5A52] font-bold">
+                {currentUser?.role === 'personnel' && 'Tier 1 (Self)'}
+                {currentUser?.role === 'welfare_officer' && 'Tier 2 (2 Portals)'}
+                {currentUser?.role === 'command_viewer' && 'Tier 3 (3 Portals)'}
+                {(currentUser?.role === 'admin' || currentUser?.role === 'demo_operator') && 'Tier 4 (All 4 Portals)'}
+              </span>
+            </div>
 
-          {/* Right Action Controls */}
-          <div className="flex items-center space-x-2">
-            {/* Walkthrough Guide */}
+            {/* Mobile Simulation Toggle */}
             <button
-              id="btn-demo-guide"
-              onClick={onOpenDemoGuide}
-              className="inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all"
-              title="View verification protocols"
-            >
-              <Compass className="w-3.5 h-3.5 mr-1 text-teal-400" />
-              <span className="hidden md:inline">Protocol Guide</span>
-            </button>
-
-            {/* Mobile Viewport Toggle */}
-            <button
-              id="btn-toggle-pwa-view"
+              id="btn-toggle-mobile-sim"
               onClick={onToggleMobileSim}
-              className={`inline-flex items-center px-2.5 py-1.5 text-xs font-medium rounded-xl border transition-all ${
+              className={`p-2 rounded-xl text-xs font-medium border transition-colors cursor-pointer ${
                 isMobileSimulated
-                  ? 'bg-orange-500 text-white border-orange-400 shadow-xs'
-                  : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                  ? 'bg-[#1d9f76] text-white border-[#1d9f76]'
+                  : 'bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#5E5A52] border-[#D2CBBB]'
               }`}
-              title="Toggle mobile device preview"
+              title={isMobileSimulated ? 'Exit Tactical Mobile Simulation' : 'Simulate Mobile Handheld View'}
             >
-              {isMobileSimulated ? (
-                <>
-                  <Monitor className="w-3.5 h-3.5 mr-1" />
-                  <span className="hidden sm:inline">Desktop</span>
-                </>
-              ) : (
-                <>
-                  <Smartphone className="w-3.5 h-3.5 mr-1 text-slate-400" />
-                  <span className="hidden sm:inline">Mobile PWA</span>
-                </>
-              )}
+              <Smartphone className="w-4 h-4" />
             </button>
 
-            {/* Reset State */}
+            {/* Reset Fixtures */}
             <button
               id="btn-reset-demo"
               onClick={onResetDemo}
-              className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 border border-slate-700 transition-all"
-              title="Reset data to baseline"
+              className="p-2 rounded-xl bg-[#F4EFE4] hover:bg-[#D2CBBB] text-[#5E5A52] border border-[#D2CBBB] transition-colors cursor-pointer"
+              title="Reset System Fixtures to Baseline"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-4 h-4" />
             </button>
 
-            {/* Role & Personnel Switcher */}
-            <div className="relative flex items-center bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1 shadow-inner">
-              <UserCheck className="w-3.5 h-3.5 text-orange-400 mr-2 shrink-0" />
-              <div className="flex flex-col">
-                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-medium">Clearance</span>
-                <select
-                  id="role-select"
-                  value={currentUser?.id || 'p-014'}
-                  onChange={(e) => onSwitchUser(e.target.value)}
-                  className="bg-transparent text-xs font-medium text-slate-100 border-none p-0 focus:ring-0 focus:outline-none cursor-pointer pr-4 appearance-none"
-                >
-                  <optgroup label="Service Personnel (Individual View)">
-                    <option value="p-014" className="bg-slate-900 text-slate-100">
-                      Const. Rajesh Verma (102nd Bn)
-                    </option>
-                    <option value="p-008" className="bg-slate-900 text-slate-100">
-                      L/Nk Amit Sharma (102nd Bn)
-                    </option>
-                    <option value="p-022" className="bg-slate-900 text-slate-100">
-                      Hav. Manoj Rao (102nd Bn)
-                    </option>
-                  </optgroup>
-                  <optgroup label="Welfare Officer (Assigned Triage)">
-                    <option value="wo-kumar" className="bg-slate-900 text-slate-100">
-                      Subedar Arjun Kumar (Welfare Officer)
-                    </option>
-                  </optgroup>
-                  <optgroup label="Sector Command (Aggregates Only)">
-                    <option value="cmd-singh" className="bg-slate-900 text-slate-100">
-                      Col. Harpreet Singh (Sector Commander)
-                    </option>
-                  </optgroup>
-                </select>
-              </div>
-              <ChevronDown className="w-3 h-3 text-slate-400 ml-1.5 pointer-events-none" />
-            </div>
-
-            {/* Corner Sign Out / Log Out Button */}
+            {/* Sign Out / Log Out Button in Corner */}
             {onSignOut && (
               <button
                 id="btn-header-signout"
                 onClick={onSignOut}
-                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 hover:text-rose-200 border border-rose-500/30 text-xs font-semibold transition-all cursor-pointer shadow-xs ml-1"
-                title="Sign out of current clearance and return to welcome portal"
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                title="Sign Out / Return to Landing Page"
               >
-                <LogOut className="w-3.5 h-3.5 text-rose-400" />
-                <span className="hidden sm:inline">Sign Out</span>
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Log Out</span>
               </button>
             )}
           </div>

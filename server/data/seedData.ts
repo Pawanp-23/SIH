@@ -21,16 +21,46 @@ export function getInitialSeedState(): DatabaseState {
     // --- KEY DEMO PERSONAS ---
     {
       id: 'p-014',
-      name: 'Rajesh Verma',
+      name: 'Rahul Verma',
       alias: 'P-014 (Constable)',
       role: 'personnel',
       unitId: 'unit-102',
       unitName: '102nd Mountain Battalion',
       rank: 'Constable',
-      assignedOfficerId: 'wo-kumar',
+      assignedOfficerId: 'wo-001',
       hasConsented: true,
       consentGrantedAt: '2026-08-01T08:00:00Z',
       avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80'
+    },
+    {
+      id: 'wo-001',
+      name: 'Capt. (Dr.) Ananya Sen',
+      alias: 'WO-001 (Medical Officer)',
+      role: 'welfare_officer',
+      unitId: 'unit-102',
+      unitName: '102nd Mountain Battalion (Medical Corps)',
+      rank: 'Captain (AMC)',
+      hasConsented: true
+    },
+    {
+      id: 'cmd-001',
+      name: 'Col. Vikram Rawat',
+      alias: 'Col. Rawat (Commanding Officer)',
+      role: 'command_viewer',
+      unitId: 'unit-102',
+      unitName: '102nd Mountain Battalion Headquarters',
+      rank: 'Colonel',
+      hasConsented: true
+    },
+    {
+      id: 'adm-001',
+      name: 'Maj. S. Iyer',
+      alias: 'Maj. Iyer (Systems Admin)',
+      role: 'demo_operator',
+      unitId: 'unit-hq',
+      unitName: 'Armed Forces Medical Informatics Wing',
+      rank: 'Major',
+      hasConsented: true
     },
     {
       id: 'p-008',

@@ -3,7 +3,7 @@
  * Defines roles, check-in payloads, assessment metrics, case workflows, and aggregate summaries.
  */
 
-export type UserRole = 'personnel' | 'welfare_officer' | 'command_viewer' | 'demo_operator';
+export type UserRole = 'personnel' | 'welfare_officer' | 'command_viewer' | 'demo_operator' | 'admin';
 
 export type ReviewBand = 'routine' | 'watch' | 'review';
 

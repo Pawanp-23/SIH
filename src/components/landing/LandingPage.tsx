@@ -18,7 +18,9 @@ import {
   Calendar,
   HelpCircle,
   ChevronRight,
-  UserCheck
+  UserCheck,
+  Stethoscope,
+  Plus
 } from 'lucide-react';
 import { SignUpModal } from './SignUpModal.js';
 import { TacticalResetModal } from '../common/TacticalResetModal.js';
@@ -27,11 +29,13 @@ import { WhoMethodologyModal } from '../common/WhoMethodologyModal.js';
 interface LandingPageProps {
   onEnterDashboard: (role?: UserRole, userId?: string) => void;
   onOpenTacticalReset: () => void;
+  onOpenLogin?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onEnterDashboard,
-  onOpenTacticalReset
+  onOpenTacticalReset,
+  onOpenLogin
 }) => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isMethodologyOpen, setIsMethodologyOpen] = useState(false);
@@ -71,7 +75,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 flex flex-col font-sans selection:bg-orange-200 selection:text-orange-900">
+    <div className="min-h-screen bg-[#e9e4d8] text-[#1E1E1E] flex flex-col font-sans selection:bg-[#efa02a]/30 selection:text-[#1E1E1E]">
       {/* Sign Up Modal */}
       <SignUpModal
         isOpen={isSignUpOpen}
@@ -92,20 +96,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       />
 
       {/* Top Calm Navigation Bar */}
-      <header className="sticky top-0 z-30 bg-[#FAF8F5]/90 backdrop-blur-md border-b border-stone-200/70 py-3.5 px-4 sm:px-6 lg:px-8">
+      <header className="sticky top-0 z-30 bg-[#e9e4d8]/90 backdrop-blur-md border-b border-[#D2CBBB] py-3.5 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-orange-600 shadow-xs">
-              <Shield className="w-5 h-5 text-orange-600" />
+            <div className="w-10 h-10 rounded-2xl bg-[#1d9f76]/15 border border-[#1d9f76]/30 flex items-center justify-center text-[#0f7058] shadow-xs">
+              <Shield className="w-5 h-5 text-[#0f7058]" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-extrabold text-lg tracking-tight text-slate-900 font-serif">SAHARA</span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-stone-100 text-slate-600 border border-stone-200">
+                <span className="font-extrabold text-lg tracking-tight text-[#1E1E1E] font-serif">SAHARA</span>
+                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-[#F4EFE4] text-[#5E5A52] border border-[#D2CBBB]">
                   AI Welfare
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 hidden sm:block">
+              <p className="text-[11px] text-[#5E5A52] hidden sm:block">
                 Armed Forces Health &amp; Operational Readiness System
               </p>
             </div>
@@ -114,130 +118,214 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="flex items-center space-x-2 sm:space-x-3">
             <button
               onClick={() => setIsBreathingOpen(true)}
-              className="hidden sm:flex items-center space-x-1.5 px-3 py-2 text-xs font-semibold text-orange-800 bg-orange-50 hover:bg-orange-100 border border-orange-200/80 rounded-full transition-all cursor-pointer shadow-2xs"
+              className="hidden sm:flex items-center space-x-1.5 px-3 py-2 text-xs font-semibold text-[#0f7058] bg-[#F4EFE4] hover:bg-[#E3DDCF] border border-[#D2CBBB] rounded-full transition-all cursor-pointer shadow-2xs"
             >
-              <Wind className="w-3.5 h-3.5 text-orange-600" />
+              <Wind className="w-3.5 h-3.5 text-[#1d9f76]" />
               <span>1-Min Breathing</span>
             </button>
 
             <button
               onClick={() => setIsMethodologyOpen(true)}
-              className="hidden md:flex items-center space-x-1.5 px-3 py-2 text-xs font-medium text-slate-700 hover:text-slate-900 bg-white border border-stone-200 rounded-full transition-all cursor-pointer"
+              className="hidden md:flex items-center space-x-1.5 px-3 py-2 text-xs font-medium text-[#1E1E1E] hover:text-[#0f7058] bg-[#F4EFE4] border border-[#D2CBBB] rounded-full transition-all cursor-pointer"
             >
-              <BookOpen className="w-3.5 h-3.5 text-slate-500" />
+              <BookOpen className="w-3.5 h-3.5 text-[#5E5A52]" />
               <span>WHO Standards</span>
             </button>
 
             <button
-              id="btn-landing-explore"
-              onClick={() => onEnterDashboard()}
-              className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-stone-100 hover:bg-stone-200 rounded-full transition-all cursor-pointer"
+              id="btn-landing-login"
+              onClick={() => (onOpenLogin ? onOpenLogin() : onEnterDashboard('personnel', 'p-001'))}
+              className="px-5 py-2 text-xs font-bold text-white bg-[#1d9f76] hover:bg-[#0f7058] rounded-full shadow-sm hover:shadow transition-all cursor-pointer flex items-center space-x-1.5"
             >
-              Quick Demo View
-            </button>
-
-            <button
-              id="btn-landing-signup"
-              onClick={() => setIsSignUpOpen(true)}
-              className="px-5 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-full shadow-sm hover:shadow transition-all cursor-pointer flex items-center space-x-1.5"
-            >
-              <span>Sign Up &amp; Enter</span>
-              <ArrowRight className="w-3.5 h-3.5 text-orange-400" />
+              <Lock className="w-3.5 h-3.5 text-[#efa02a]" />
+              <span>Duty Echelon Sign-In</span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section: Calm, Reassuring, Clear */}
-      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Soft Background Accents */}
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-orange-100/40 rounded-full blur-3xl pointer-events-none -z-10" />
-        <div className="absolute top-40 right-10 w-[300px] h-[300px] bg-emerald-100/30 rounded-full blur-3xl pointer-events-none -z-10" />
+      {/* Hero Section: Soldier & Hospital Doctor Care Theme */}
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-[#e9e4d8] text-[#1E1E1E]">
+        {/* Background Image & Ambient Hospital Care Atmosphere */}
+        <div className="absolute inset-0 -z-20 overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=2000&q=85"
+            alt="Military medical doctor attending to soldier in field hospital"
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover object-center scale-105 filter brightness-[0.72] contrast-[1.1] transition-transform duration-1000"
+          />
+          {/* Theme-Tuned Warm Overlay: e9e4d8 (background) + 1d9f76 (primary) tint */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#e9e4d8]/96 via-[#e9e4d8]/90 to-[#e9e4d8]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#e9e4d8]/95 via-transparent to-[#e9e4d8]/95 opacity-80" />
+        </div>
 
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-stone-200 shadow-2xs text-xs font-semibold text-slate-700">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Section 14 Statutory Medical Privilege &bull; Zero Retaliatory Logging</span>
+        {/* Soft Background Accents */}
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#efa02a]/15 rounded-full blur-3xl pointer-events-none -z-10" />
+        <div className="absolute top-40 right-10 w-[320px] h-[320px] bg-[#1d9f76]/15 rounded-full blur-3xl pointer-events-none -z-10" />
+
+        <div className="max-w-5xl mx-auto space-y-8">
+          <div className="text-center space-y-5 max-w-4xl mx-auto">
+            {/* Clinical Privilege Status Badge */}
+            <div className="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-[#F4EFE4] border border-[#D2CBBB] shadow-xs text-xs font-semibold text-[#1E1E1E]">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#1d9f76] animate-pulse" />
+              <Stethoscope className="w-3.5 h-3.5 text-[#0f7058]" />
+              <span>Section 14 Medical Secrecy &bull; Field Hospital Care &bull; Non-Punitive Logging</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#1E1E1E] tracking-tight leading-[1.15] font-serif">
+              Confidential care for soldiers. <br />
+              <span className="text-[#0f7058]">
+                Clear operational readiness for commanders.
+              </span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-[#5E5A52] max-w-2xl mx-auto leading-relaxed">
+              SAHARA provides an early warning system for personnel fatigue, sleep debt, and cumulative strain. Clinical teams intervene early with restorative rest before exhaustion compromises health or mission readiness.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <button
+                id="btn-hero-echelon-login"
+                onClick={() => (onOpenLogin ? onOpenLogin() : onEnterDashboard('personnel', 'p-001'))}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#1d9f76] hover:bg-[#0f7058] text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-2 cursor-pointer active:scale-95"
+              >
+                <Lock className="w-4 h-4 text-[#efa02a]" />
+                <span>Access Echelon Sign-In (4 Levels)</span>
+              </button>
+
+              <button
+                onClick={() => onEnterDashboard('personnel', 'p-001')}
+                className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#F4EFE4] hover:bg-[#E3DDCF] text-[#1E1E1E] font-semibold text-sm border border-[#D2CBBB] shadow-2xs transition-all cursor-pointer flex items-center justify-center space-x-2"
+              >
+                <UserCheck className="w-4 h-4 text-[#0f7058]" />
+                <span>Quick View: Constable Rahul Verma</span>
+              </button>
+            </div>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15] font-serif">
-            Peace of mind for the soldier. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-amber-600 to-emerald-700">
-              Clarity for the commander.
-            </span>
-          </h1>
+          {/* Picture-in-Picture: Doctor Assisting Soldier in Field Hospital */}
+          <div className="relative rounded-2xl bg-[#F4EFE4]/95 border border-[#D2CBBB] p-4 sm:p-6 shadow-md backdrop-blur-md overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              {/* Visual Frame of Doctor & Soldier */}
+              <div className="lg:col-span-5 relative rounded-xl overflow-hidden border border-[#D2CBBB] shadow-xs group">
+                <img
+                  src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=900&q=80"
+                  alt="Doctor helping soldier during health assessment"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-52 sm:h-60 object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute bottom-3 left-3 right-3 text-white">
+                  <div className="flex items-center space-x-2 text-[10px] font-mono uppercase tracking-wider text-[#efa02a]">
+                    <span className="w-2 h-2 rounded-full bg-[#1d9f76] animate-pulse" />
+                    <span>102nd Mountain Bn &bull; Medical Aid Post</span>
+                  </div>
+                  <div className="text-xs font-bold font-serif leading-snug mt-0.5">
+                    Military Medical Officer Caring for Frontline Troops
+                  </div>
+                  <div className="text-[10px] text-stone-300">
+                    Confidential Vitals &amp; Non-Punitive Recovery Exemption
+                  </div>
+                </div>
+              </div>
 
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            SAHARA transforms defense welfare through compassionate, explainable AI. Soldiers log confidential 30-second recovery reflections, welfare officers receive early non-punitive care alerts, and leadership gains aggregated readiness metrics.
-          </p>
+              {/* Clinical Context & Interactive Telemetry */}
+              <div className="lg:col-span-7 space-y-4 text-left">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 rounded-xl bg-[#1d9f76]/15 border border-[#1d9f76]/30 flex items-center justify-center text-[#0f7058]">
+                      <Stethoscope className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-[#1E1E1E]">Active Clinical Care Protocol</div>
+                      <div className="text-[11px] text-[#5E5A52]">SOP 4.2: Circadian Desynchrony &amp; Sleep Debt Reset</div>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#1d9f76]/15 text-[#0f7058] border border-[#1d9f76]/30 font-bold">
+                    Doctor Approved
+                  </span>
+                </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-            <button
-              id="btn-hero-signup"
-              onClick={() => setIsSignUpOpen(true)}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
-            >
-              <span>Get Started &amp; Choose Your Role</span>
-              <ArrowRight className="w-4 h-4 text-orange-400" />
-            </button>
+                <div className="p-3.5 rounded-xl bg-[#e9e4d8]/80 border border-[#D2CBBB] space-y-2 text-xs">
+                  <div className="flex items-center justify-between text-[#5E5A52]">
+                    <span className="font-semibold text-[#1E1E1E]">Service Member:</span>
+                    <span className="font-mono">Lance Naik Amit Sharma (Bravo Coy)</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[#5E5A52]">
+                    <span className="font-semibold text-[#1E1E1E]">Attending Medical Officer:</span>
+                    <span className="text-[#0f7058] font-medium">Capt. (Dr.) Ananya Sen, AMC</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[#5E5A52] border-t border-[#D2CBBB]/60 pt-2">
+                    <span className="font-semibold text-[#1E1E1E]">Clinical Recommendation:</span>
+                    <span className="text-[#efa02a] font-bold">48-Hour High-Altitude Exemption</span>
+                  </div>
+                </div>
 
-            <button
-              onClick={() => onEnterDashboard('personnel', 'p-014')}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white hover:bg-stone-50 text-slate-800 font-semibold text-sm border border-stone-200 shadow-2xs transition-all cursor-pointer"
-            >
-              Enter as Service Member (Rajesh)
-            </button>
+                <div className="flex items-center justify-between pt-1">
+                  <p className="text-[11px] text-[#5E5A52]">
+                    All clinical notes are sealed under Section 14 medical secrecy and cannot be used in disciplinary evaluations.
+                  </p>
+                  <button
+                    onClick={() => setIsBreathingOpen(true)}
+                    className="shrink-0 text-xs font-semibold text-[#0f7058] hover:text-[#1d9f76] flex items-center space-x-1 cursor-pointer pl-3"
+                  >
+                    <Wind className="w-3.5 h-3.5" />
+                    <span>Try 1-Min Reset</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Core Trust Guarantees */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-8 border-t border-stone-200/80 text-left">
-            <div className="p-3 bg-white/80 rounded-2xl border border-stone-200/70 shadow-2xs">
-              <div className="w-7 h-7 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center mb-1.5">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-[#D2CBBB] text-left">
+            <div className="p-3 bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] shadow-2xs">
+              <div className="w-7 h-7 rounded-xl bg-[#1d9f76]/15 text-[#0f7058] flex items-center justify-center mb-1.5">
                 <Lock className="w-3.5 h-3.5" />
               </div>
-              <div className="text-xs font-bold text-slate-900">Medical Privilege</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Section 14 Protected</div>
+              <div className="text-xs font-bold text-[#1E1E1E]">Medical Privilege</div>
+              <div className="text-[11px] text-[#5E5A52] mt-0.5">Section 14 Protected</div>
             </div>
 
-            <div className="p-3 bg-white/80 rounded-2xl border border-stone-200/70 shadow-2xs">
-              <div className="w-7 h-7 rounded-xl bg-orange-50 text-orange-700 flex items-center justify-center mb-1.5">
+            <div className="p-3 bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] shadow-2xs">
+              <div className="w-7 h-7 rounded-xl bg-[#efa02a]/15 text-[#efa02a] flex items-center justify-center mb-1.5">
                 <Shield className="w-3.5 h-3.5" />
               </div>
-              <div className="text-xs font-bold text-slate-900">k ≥ 10 Anonymity</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Zero individual snooping</div>
+              <div className="text-xs font-bold text-[#1E1E1E]">k ≥ 10 Anonymity</div>
+              <div className="text-[11px] text-[#5E5A52] mt-0.5">Zero individual snooping</div>
             </div>
 
-            <div className="p-3 bg-white/80 rounded-2xl border border-stone-200/70 shadow-2xs">
-              <div className="w-7 h-7 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center mb-1.5">
+            <div className="p-3 bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] shadow-2xs">
+              <div className="w-7 h-7 rounded-xl bg-[#0f7058]/15 text-[#0f7058] flex items-center justify-center mb-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
               </div>
-              <div className="text-xs font-bold text-slate-900">TreeSHAP AI</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">100% Explainable factors</div>
+              <div className="text-xs font-bold text-[#1E1E1E]">TreeSHAP AI</div>
+              <div className="text-[11px] text-[#5E5A52] mt-0.5">100% Explainable factors</div>
             </div>
 
-            <div className="p-3 bg-white/80 rounded-2xl border border-stone-200/70 shadow-2xs">
-              <div className="w-7 h-7 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center mb-1.5">
+            <div className="p-3 bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] shadow-2xs">
+              <div className="w-7 h-7 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center mb-1.5">
                 <Heart className="w-3.5 h-3.5" />
               </div>
-              <div className="text-xs font-bold text-slate-900">Non-Punitive Care</div>
-              <div className="text-[11px] text-slate-500 mt-0.5">Focus on recovery &amp; rest</div>
+              <div className="text-xs font-bold text-[#1E1E1E]">Non-Punitive Care</div>
+              <div className="text-[11px] text-[#5E5A52] mt-0.5">Focus on recovery &amp; rest</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Interactive Workflow Explainer (Demystifying the entire system!) */}
-      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-white border-y border-stone-200/80">
+      {/* Interactive Operational Workflow Explainer */}
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 bg-[#F4EFE4] border-y border-[#D2CBBB]">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-orange-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-              Interactive Workflow Guide
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#0f7058] bg-[#1d9f76]/15 px-3 py-1 rounded-full border border-[#1d9f76]/30">
+              Operational Care Workflow
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              How the SAHARA Ecosystem Works
+            <h2 className="text-2xl sm:text-3xl font-black text-[#1E1E1E] tracking-tight font-serif">
+              How the SAHARA Care Protocol Works
             </h2>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Step through the 4-phase non-punitive loop. Click each step to see what happens and test the live interactive preview.
+            <p className="text-sm text-[#5E5A52] leading-relaxed">
+              A 4-phase non-punitive health cycle connecting personnel check-ins directly to medical welfare support.
             </p>
           </div>
 
@@ -246,25 +334,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {[
               {
                 num: 1,
-                title: 'Daily Reflection',
-                sub: 'Service Member Check-in',
+                title: 'Daily Check-In',
+                sub: 'Service Member Self-Report',
                 icon: Heart
               },
               {
                 num: 2,
-                title: 'Explainable AI',
-                sub: 'TreeSHAP Factor Breakdown',
+                title: 'Strain Attribution',
+                sub: 'TreeSHAP Clinical Breakdown',
                 icon: Sparkles
               },
               {
                 num: 3,
-                title: 'Supportive Care',
-                sub: 'Welfare Officer Triage',
+                title: 'Medical Triage',
+                sub: 'Welfare Officer Support',
                 icon: Activity
               },
               {
                 num: 4,
-                title: 'Force Readiness',
+                title: 'Readiness Matrix',
                 sub: 'Anonymized Command View',
                 icon: Layers
               }
@@ -277,27 +365,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   onClick={() => setActiveStep(step.num)}
                   className={`p-4 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                     isActive
-                      ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900/10'
-                      : 'bg-[#FAF8F5] hover:bg-stone-100 text-slate-700 border-stone-200'
+                      ? 'bg-[#1d9f76] text-white border-[#1d9f76] shadow-sm'
+                      : 'bg-[#E3DDCF] hover:bg-[#D2CBBB] text-[#1E1E1E] border-[#D2CBBB]'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span
                       className={`w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center ${
-                        isActive ? 'bg-orange-500 text-white' : 'bg-stone-200 text-slate-700'
+                        isActive ? 'bg-[#0f7058] text-white' : 'bg-[#D2CBBB] text-[#1E1E1E]'
                       }`}
                     >
                       {step.num}
                     </span>
                     <Icon
-                      className={`w-4 h-4 ${isActive ? 'text-orange-400' : 'text-slate-400'}`}
+                      className={`w-4 h-4 ${isActive ? 'text-[#efa02a]' : 'text-[#5E5A52]'}`}
                     />
                   </div>
                   <div>
                     <div className="font-bold text-xs">{step.title}</div>
                     <div
                       className={`text-[10px] truncate ${
-                        isActive ? 'text-slate-300' : 'text-slate-500'
+                        isActive ? 'text-white/80' : 'text-[#5E5A52]'
                       }`}
                     >
                       {step.sub}
@@ -309,51 +397,51 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Interactive Step Detail Card */}
-          <div className="bg-[#FAF8F5] rounded-3xl border border-stone-200 p-6 sm:p-8 shadow-sm">
+          <div className="bg-[#E3DDCF] rounded-3xl border border-[#D2CBBB] p-6 sm:p-8 shadow-xs">
             {activeStep === 1 && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-6 space-y-4">
-                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Phase 1: Confidential Individual Reflection</span>
+                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-[#0f7058] bg-[#1d9f76]/15 px-2.5 py-1 rounded-full border border-[#1d9f76]/30">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#0f7058]" />
+                    <span>Phase 1: Confidential Daily Self-Report</span>
                   </div>
-                  <h3 className="text-xl font-extrabold text-slate-900">
-                    Service Member Logs 3 Simple Metrics in 30 Seconds
+                  <h3 className="text-xl font-extrabold text-[#1E1E1E]">
+                    Personnel Log Sleep and Fatigue in Under 30 Seconds
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Every morning, personnel log three basic health indicators: hours of sleep, perceived physical fatigue, and stress. Individual records are sealed under Section 14 medical confidentiality: commanders cannot inspect raw personal inputs.
+                  <p className="text-xs sm:text-sm text-[#5E5A52] leading-relaxed">
+                    Personnel log simple metrics: hours slept, perceived physical fatigue, and stress. Raw inputs remain strictly protected under Section 14 medical secrecy; commanding officers cannot view individual personal entries.
                   </p>
-                  <ul className="space-y-2 text-xs text-slate-600">
+                  <ul className="space-y-2 text-xs text-[#5E5A52]">
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                      <span>Zero disciplinary consequences or performance penalty</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Zero disciplinary consequences or performance evaluation impact</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                      <span>Instant personal recovery recommendations (e.g. 90-min sleep cycle)</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Actionable restorative suggestions (e.g. 90-minute sleep alignment)</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
-                      <span>Option to request confidential officer consultation with one click</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Confidential request for medical welfare consultation</span>
                     </li>
                   </ul>
                   <div className="pt-2">
                     <button
-                      onClick={() => onEnterDashboard('personnel', 'p-014')}
-                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
+                      onClick={() => onEnterDashboard('personnel', 'p-001')}
+                      className="px-5 py-2.5 bg-[#1d9f76] hover:bg-[#0f7058] text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
                     >
-                      <span>Try the Service Member Check-In Screen</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-orange-400" />
+                      <span>Open Service Member Check-In Portal</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#efa02a]" />
                     </button>
                   </div>
                 </div>
 
                 {/* Interactive Live Mini-Simulator */}
-                <div className="lg:col-span-6 bg-white rounded-3xl border border-stone-200 p-6 space-y-4 shadow-sm">
-                  <div className="flex items-center justify-between border-b border-stone-100 pb-3">
-                    <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                      <Activity className="w-4 h-4 text-orange-500" />
-                      <span>Live Interactive Check-In Demo</span>
+                <div className="lg:col-span-6 bg-[#F4EFE4] rounded-3xl border border-[#D2CBBB] p-6 space-y-4 shadow-xs">
+                  <div className="flex items-center justify-between border-b border-[#D2CBBB] pb-3">
+                    <span className="text-xs font-bold text-[#1E1E1E] flex items-center gap-1.5">
+                      <Activity className="w-4 h-4 text-[#1d9f76]" />
+                      <span>Live Interactive Check-In Simulator</span>
                     </span>
                     <span className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border ${currentBand.color}`}>
                       Strain: {calculatedStrain}/100 ({currentBand.band})
@@ -382,12 +470,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
                   {/* Fatigue Slider */}
                   <div className="space-y-1">
-                    <div className="flex justify-between text-xs font-medium text-slate-700">
+                    <div className="flex justify-between text-xs font-medium text-[#5E5A52]">
                       <span className="flex items-center gap-1">
-                        <Zap className="w-3.5 h-3.5 text-slate-400" />
+                        <Zap className="w-3.5 h-3.5 text-[#5E5A52]" />
                         Perceived Fatigue Level (1–5):
                       </span>
-                      <span className="font-mono font-bold text-slate-900">{simFatigue} / 5</span>
+                      <span className="font-mono font-bold text-[#1E1E1E]">{simFatigue} / 5</span>
                     </div>
                     <div className="grid grid-cols-5 gap-1">
                       {[1, 2, 3, 4, 5].map((lvl) => (
@@ -395,10 +483,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                           key={lvl}
                           type="button"
                           onClick={() => setSimFatigue(lvl)}
-                          className={`py-1.5 rounded-xl border text-xs font-medium transition-all ${
+                          className={`py-1.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${
                             simFatigue === lvl
-                              ? 'bg-slate-900 text-white border-slate-900'
-                              : 'bg-stone-50 hover:bg-stone-100 text-slate-700 border-stone-200'
+                              ? 'bg-[#1d9f76] text-white border-[#1d9f76]'
+                              : 'bg-[#E3DDCF] hover:bg-[#D2CBBB] text-[#1E1E1E] border-[#D2CBBB]'
                           }`}
                         >
                           {lvl}
@@ -407,8 +495,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200/70 text-[11px] text-slate-600 leading-relaxed">
-                    <strong>Real-Time Result:</strong> {simSleep < 6 ? 'Sleep deficit detected (-2.2h vs optimal baseline). Recommend restorative blackout nap.' : 'Sleep duration within healthy operational tolerance.'}
+                  <div className="p-3 bg-[#E3DDCF] rounded-2xl border border-[#D2CBBB] text-[11px] text-[#5E5A52] leading-relaxed">
+                    <strong className="text-[#1E1E1E]">Calculated Assessment:</strong> {simSleep < 6 ? 'Acute sleep deficit identified (-2.2h vs restorative baseline). Prescribing restorative rest period.' : 'Sleep hours within standard physiological recovery envelope.'}
                   </div>
                 </div>
               </div>
@@ -417,41 +505,41 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {activeStep === 2 && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-6 space-y-4">
-                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-orange-800 bg-orange-50 px-2.5 py-1 rounded-full border border-orange-200">
-                    <Sparkles className="w-3.5 h-3.5 text-orange-600" />
+                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-[#0f7058] bg-[#1d9f76]/15 px-2.5 py-1 rounded-full border border-[#1d9f76]/30">
+                    <Sparkles className="w-3.5 h-3.5 text-[#0f7058]" />
                     <span>Phase 2: Mathematical Factor Attribution</span>
                   </div>
-                  <h3 className="text-xl font-extrabold text-slate-900">
-                    Zero Black-Box Mystery: TreeSHAP Explains Every Single Point
+                  <h3 className="text-xl font-extrabold text-[#1E1E1E]">
+                    Explainable AI: TreeSHAP Attribute Analysis
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Legacy AI assigns arbitrary risk flags without explanation. SAHARA employs TreeSHAP (Tree Shapley Additive Explanations) so welfare officers see mathematically verified contributors: exactly how much sleep debt, shift duration, or night duty influenced the score.
+                  <p className="text-xs sm:text-sm text-[#5E5A52] leading-relaxed">
+                    Rather than providing opaque predictions, SAHARA uses TreeSHAP (Tree Shapley Additive Explanations) to demonstrate mathematically exact factors: sleep deficit, duty cycle length, and environmental conditions.
                   </p>
-                  <ul className="space-y-2 text-xs text-slate-600">
+                  <ul className="space-y-2 text-xs text-[#5E5A52]">
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      <span>Additive equation: Strain = Base (28.4) + Factor Contributions</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Additive equation: Cumulative Strain = Base Baseline + Attributed Deviations</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                      <span>Transparent justification before initiating any welfare consultation</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Transparent justification prior to any restorative intervention recommendation</span>
                     </li>
                   </ul>
                   <div className="pt-2">
                     <button
-                      onClick={() => onEnterDashboard('command_viewer')}
-                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
+                      onClick={() => onEnterDashboard('welfare_officer', 'wo-001')}
+                      className="px-5 py-2.5 bg-[#1d9f76] hover:bg-[#0f7058] text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
                     >
-                      <span>Explore TreeSHAP in Personnel Deep-Dive</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-orange-400" />
+                      <span>Review Clinical SHAP Waterfall in Welfare Portal</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#efa02a]" />
                     </button>
                   </div>
                 </div>
 
                 {/* Factor Contribution Visual Card */}
-                <div className="lg:col-span-6 bg-white rounded-3xl border border-stone-200 p-6 space-y-3.5 shadow-sm">
-                  <span className="text-xs font-bold text-slate-900 block border-b border-stone-100 pb-2">
-                    Sample TreeSHAP Factor Waterfall
+                <div className="lg:col-span-6 bg-[#F4EFE4] rounded-3xl border border-[#D2CBBB] p-6 space-y-3.5 shadow-xs">
+                  <span className="text-xs font-bold text-[#1E1E1E] block border-b border-[#D2CBBB] pb-2">
+                    Sample Clinical TreeSHAP Waterfall
                   </span>
                   <div className="space-y-2.5 text-xs">
                     <div>
@@ -459,33 +547,33 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                         <span className="font-semibold text-rose-700">+ Acute Sleep Deficit (4.5h vs 7.2h baseline)</span>
                         <span className="font-mono font-bold text-rose-700">+22.4 pts</span>
                       </div>
-                      <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
+                      <div className="w-full h-2 bg-[#E3DDCF] rounded-full overflow-hidden">
                         <div className="h-full bg-rose-500 rounded-full w-[70%]" />
                       </div>
                     </div>
 
                     <div>
                       <div className="flex justify-between mb-1">
-                        <span className="font-semibold text-rose-700">+ Night Duty Rotation (3 consecutive shifts)</span>
-                        <span className="font-mono font-bold text-rose-700">+14.1 pts</span>
+                        <span className="font-semibold text-[#efa02a]">+ Night Duty Rotation (3 consecutive shifts)</span>
+                        <span className="font-mono font-bold text-[#efa02a]">+14.1 pts</span>
                       </div>
-                      <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-amber-500 rounded-full w-[45%]" />
+                      <div className="w-full h-2 bg-[#E3DDCF] rounded-full overflow-hidden">
+                        <div className="h-full bg-[#efa02a] rounded-full w-[45%]" />
                       </div>
                     </div>
 
                     <div>
                       <div className="flex justify-between mb-1">
-                        <span className="font-semibold text-emerald-700">- High Squad Cohesion &amp; Rest Days</span>
-                        <span className="font-mono font-bold text-emerald-700">-8.5 pts</span>
+                        <span className="font-semibold text-[#0f7058]">- High Squad Cohesion &amp; Rest Days</span>
+                        <span className="font-mono font-bold text-[#0f7058]">-8.5 pts</span>
                       </div>
-                      <div className="w-full h-2 bg-stone-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500 rounded-full w-[25%]" />
+                      <div className="w-full h-2 bg-[#E3DDCF] rounded-full overflow-hidden">
+                        <div className="h-full bg-[#1d9f76] rounded-full w-[25%]" />
                       </div>
                     </div>
                   </div>
-                  <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200/70 text-[11px] text-slate-500">
-                    Net Strain Score = <strong className="text-slate-900 font-mono">68/100 (Review Band)</strong> &bull; Fully auditable by medical officers.
+                  <div className="p-3 bg-[#E3DDCF] rounded-2xl border border-[#D2CBBB] text-[11px] text-[#5E5A52]">
+                    Calculated Strain Index = <strong className="text-[#1E1E1E] font-mono">68/100 (Clinical Review Band)</strong> &bull; Validated under Section 14 medical secrecy.
                   </div>
                 </div>
               </div>
@@ -494,52 +582,52 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {activeStep === 3 && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-6 space-y-4">
-                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-blue-800 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
-                    <Activity className="w-3.5 h-3.5 text-blue-600" />
-                    <span>Phase 3: Proactive Care, Never Punishment</span>
+                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-[#0f7058] bg-[#1d9f76]/15 px-2.5 py-1 rounded-full border border-[#1d9f76]/30">
+                    <Activity className="w-3.5 h-3.5 text-[#0f7058]" />
+                    <span>Phase 3: Clinical Welfare Triage</span>
                   </div>
-                  <h3 className="text-xl font-extrabold text-slate-900">
-                    Assigned Welfare Officers Receive Early Support Alerts
+                  <h3 className="text-xl font-extrabold text-[#1E1E1E]">
+                    Medical Officers Receive Proactive Support Alerts
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    When consecutive fatigue entries exceed safe operational limits (Index ≥ 65 for 2 days), the designated Unit Welfare Officer (e.g. Subedar Arjun Kumar) receives a confidential case notice to schedule rest rotations, hydration checks, and quiet recovery.
+                  <p className="text-xs sm:text-sm text-[#5E5A52] leading-relaxed">
+                    When consecutive check-in entries indicate severe fatigue (Index ≥ 65 across 48 hours), the assigned Medical Welfare Officer receives a confidential notification to schedule restorative duty adjustments.
                   </p>
-                  <ul className="space-y-2 text-xs text-slate-600">
+                  <ul className="space-y-2 text-xs text-[#5E5A52]">
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                      <span>Standardized Standard Operating Procedures (SOP-WEL-01 to 05)</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Standard clinical operating protocols (SOP-WEL-01 through 05)</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                      <span>What-If Simulator tests rotation impacts before altering duty rosters</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Roster impact simulation prior to recommending duty alterations</span>
                     </li>
                   </ul>
                   <div className="pt-2">
                     <button
-                      onClick={() => onEnterDashboard('welfare_officer', 'wo-kumar')}
-                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
+                      onClick={() => onEnterDashboard('welfare_officer', 'wo-001')}
+                      className="px-5 py-2.5 bg-[#1d9f76] hover:bg-[#0f7058] text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
                     >
-                      <span>Login as Subedar Arjun Kumar (Welfare Officer)</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-orange-400" />
+                      <span>Sign In as Capt. Dr. Ananya Sen (Welfare Officer)</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#efa02a]" />
                     </button>
                   </div>
                 </div>
 
-                <div className="lg:col-span-6 bg-white rounded-3xl border border-stone-200 p-6 space-y-3 shadow-sm">
-                  <div className="flex items-center justify-between border-b border-stone-100 pb-2">
-                    <span className="text-xs font-bold text-slate-900">Welfare Triage Alert #CASE-882</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">
-                      Action Required
+                <div className="lg:col-span-6 bg-[#F4EFE4] rounded-3xl border border-[#D2CBBB] p-6 space-y-3 shadow-xs">
+                  <div className="flex items-center justify-between border-b border-[#D2CBBB] pb-2">
+                    <span className="text-xs font-bold text-[#1E1E1E]">Medical Welfare Alert #CASE-882</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 border border-rose-200">
+                      Action Recommended
                     </span>
                   </div>
-                  <p className="text-xs text-slate-700">
-                    <strong>Service Member:</strong> Rajesh Verma (Constable, 102nd Mountain Bn)
+                  <p className="text-xs text-[#1E1E1E]">
+                    <strong>Service Member:</strong> Constable Rahul Verma (102nd Mountain Battalion)
                   </p>
-                  <p className="text-xs text-slate-600">
-                    <strong>Recommended SOP:</strong> 72-Hour Circadian Blackout Sleep &bull; Reassign Night Watch Duty
+                  <p className="text-xs text-[#5E5A52]">
+                    <strong>Clinical Recommendation:</strong> 48-Hour High-Altitude Exemption &bull; Circadian Sleep Reset
                   </p>
-                  <div className="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-xs text-emerald-900">
-                    <strong>Resolution Status:</strong> Non-punitive check-in scheduled for 14:00 today.
+                  <div className="p-3 bg-[#E3DDCF] rounded-2xl border border-[#D2CBBB] text-xs text-[#0f7058] font-medium">
+                    Restorative consultation scheduled with Medical Officer. Protected under Section 14.
                   </div>
                 </div>
               </div>
@@ -548,56 +636,56 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {activeStep === 4 && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                 <div className="lg:col-span-6 space-y-4">
-                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-purple-800 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
-                    <Layers className="w-3.5 h-3.5 text-purple-600" />
-                    <span>Phase 4: High-Level Force Readiness</span>
+                  <div className="inline-flex items-center space-x-1.5 text-xs font-semibold text-[#0f7058] bg-[#1d9f76]/15 px-2.5 py-1 rounded-full border border-[#1d9f76]/30">
+                    <Layers className="w-3.5 h-3.5 text-[#0f7058]" />
+                    <span>Phase 4: Operational Readiness Matrix</span>
                   </div>
-                  <h3 className="text-xl font-extrabold text-slate-900">
-                    Brigade Commanders See Battalion Health Without Surveillance
+                  <h3 className="text-xl font-extrabold text-[#1E1E1E]">
+                    Command Readiness Awareness Without Intrusive Surveillance
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                    Sector commanders require macro-level awareness of combat readiness, not micromanagement of individuals. Cohorts with fewer than 10 personnel are automatically masked by cryptographic k-anonymity suppression to preserve absolute trust.
+                  <p className="text-xs sm:text-sm text-[#5E5A52] leading-relaxed">
+                    Battalion commanders receive macro-level operational readiness metrics without micro-level inspection of personal records. Cohorts with fewer than 10 personnel are automatically suppressed with cryptographic k-anonymity to preserve absolute integrity.
                   </p>
-                  <ul className="space-y-2 text-xs text-slate-600">
+                  <ul className="space-y-2 text-xs text-[#5E5A52]">
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                      <span>Force readiness percentage benchmarked against WHO GDHM standards</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Force readiness percentage aligned with WHO global defense health guidelines</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
-                      <span>One-click Sector Executive Intelligence Brief for brigade meetings</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#1d9f76]" />
+                      <span>Executive intelligence briefs summarizing unit trends and fatigue rates</span>
                     </li>
                   </ul>
                   <div className="pt-2">
                     <button
-                      onClick={() => onEnterDashboard('command_viewer', 'cmd-singh')}
-                      className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
+                      onClick={() => onEnterDashboard('command_viewer', 'cmd-001')}
+                      className="px-5 py-2.5 bg-[#1d9f76] hover:bg-[#0f7058] text-white font-bold text-xs rounded-full cursor-pointer shadow-xs inline-flex items-center gap-2"
                     >
-                      <span>Login as Col. Harpreet Singh (Command View)</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-orange-400" />
+                      <span>Sign In as Col. Vikram Rawat (Commanding Officer)</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#efa02a]" />
                     </button>
                   </div>
                 </div>
 
-                <div className="lg:col-span-6 bg-white rounded-3xl border border-stone-200 p-6 space-y-3 shadow-sm">
-                  <span className="text-xs font-bold text-slate-900 block border-b border-stone-100 pb-2">
-                    Force Health Matrix (Sector CommandHQ)
+                <div className="lg:col-span-6 bg-[#F4EFE4] rounded-3xl border border-[#D2CBBB] p-6 space-y-3 shadow-xs">
+                  <span className="text-xs font-bold text-[#1E1E1E] block border-b border-[#D2CBBB] pb-2">
+                    Brigade Operational Matrix (102nd Mountain Infantry)
                   </span>
                   <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                    <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200">
-                      <div className="text-[10px] text-slate-500 uppercase">Force Readiness</div>
-                      <div className="text-xl font-black text-slate-900 font-mono mt-0.5">88.4%</div>
-                      <div className="text-[10px] text-emerald-600 font-medium">WHO Benchmark Met</div>
+                    <div className="p-3 bg-[#E3DDCF] rounded-2xl border border-[#D2CBBB]">
+                      <div className="text-[10px] text-[#5E5A52] uppercase font-mono">Force Readiness</div>
+                      <div className="text-xl font-black text-[#1E1E1E] font-mono mt-0.5">88.4%</div>
+                      <div className="text-[10px] text-[#0f7058] font-medium">Standard Met</div>
                     </div>
-                    <div className="p-3 bg-stone-50 rounded-2xl border border-stone-200">
-                      <div className="text-[10px] text-slate-500 uppercase">Avg Night Rota</div>
-                      <div className="text-xl font-black text-slate-900 font-mono mt-0.5">28.5%</div>
-                      <div className="text-[10px] text-slate-500">Under 35% Cap</div>
+                    <div className="p-3 bg-[#E3DDCF] rounded-2xl border border-[#D2CBBB]">
+                      <div className="text-[10px] text-[#5E5A52] uppercase font-mono">Night Shift Load</div>
+                      <div className="text-xl font-black text-[#1E1E1E] font-mono mt-0.5">28.5%</div>
+                      <div className="text-[10px] text-[#5E5A52]">Within 35% Guideline</div>
                     </div>
                   </div>
-                  <div className="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900">
-                    <Lock className="w-3.5 h-3.5 inline mr-1 text-amber-700" />
-                    <strong>Detachment Alpha (6 personnel):</strong> Data automatically suppressed per Section 14 (cohort size &lt; 10).
+                  <div className="p-3 bg-[#E3DDCF] rounded-2xl border border-[#D2CBBB] text-xs text-[#5E5A52]">
+                    <Lock className="w-3.5 h-3.5 inline mr-1 text-[#0f7058]" />
+                    <strong>Outpost Bravo (7 personnel):</strong> Anonymized data suppressed per Section 14 (cohort size &lt; 10).
                   </div>
                 </div>
               </div>
@@ -606,144 +694,186 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* 3 Core Roles Section with Instant Sign Up & Direct Access */}
+      {/* 4 Echelons Section: Clear Hierarchical RBAC Gate */}
       <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
-            Tailored Experiences
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#0f7058] bg-[#1d9f76]/15 px-3 py-1 rounded-full border border-[#1d9f76]/30">
+            Role-Based Access Control (RBAC)
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Choose Your Operating Persona
+          <h2 className="text-2xl sm:text-3xl font-black text-[#1E1E1E] tracking-tight font-serif">
+            Official Echelon Access Levels
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600">
-            Switch between roles at any time using the clearance selector in the top bar.
+          <p className="text-xs sm:text-sm text-[#5E5A52]">
+            Each user is authenticated into an explicit security echelon with strictly demarcated portal visibility.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Service Member Card */}
-          <div className="bg-white rounded-3xl border border-stone-200/80 p-6 flex flex-col justify-between hover:border-stone-300 transition-all shadow-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Level 1: Personnel */}
+          <div className="bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] p-5 flex flex-col justify-between hover:border-[#1d9f76] transition-all shadow-2xs">
             <div className="space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700">
-                <Heart className="w-5 h-5" />
-              </div>
-              <h3 className="text-base font-bold text-slate-900">Service Member</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Log daily sleep, physical fatigue, and stress in a supportive, private space. Access 1-minute tactical breathing resets and recovery rituals.
-              </p>
-              <div className="pt-2 border-t border-stone-100 space-y-1 text-xs text-slate-500">
-                <div>&bull; Protected by Section 14 Medical Privilege</div>
-                <div>&bull; 7-Day longitudinal wellness progression</div>
-                <div>&bull; Confidential officer consultation button</div>
-              </div>
-            </div>
-            <div className="pt-6">
-              <button
-                onClick={() => onEnterDashboard('personnel', 'p-014')}
-                className="w-full py-2.5 px-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>Enter as Service Member</span>
-                <ChevronRight className="w-4 h-4 text-orange-400" />
-              </button>
-            </div>
-          </div>
-
-          {/* Welfare Officer Card */}
-          <div className="bg-white rounded-3xl border border-stone-200/80 p-6 flex flex-col justify-between hover:border-stone-300 transition-all shadow-sm ring-2 ring-orange-500/20">
-            <div className="space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-700">
-                <Activity className="w-5 h-5" />
-              </div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-slate-900">Welfare Officer</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 font-semibold">
-                  Care Wing
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#1d9f76]/15 text-[#0f7058] border border-[#1d9f76]/30">
+                  Tier 1 &bull; 1 Portal
                 </span>
+                <Heart className="w-4 h-4 text-[#1d9f76]" />
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Triage personnel alerts, review TreeSHAP factor explanations, simulate roster rebalancings, and assign supportive recovery workflows.
+              <div>
+                <h3 className="text-sm font-bold text-[#1E1E1E]">Service Member</h3>
+                <div className="text-xs font-medium text-[#5E5A52]">Constable Rahul Verma</div>
+              </div>
+              <p className="text-xs text-[#5E5A52] leading-relaxed">
+                Personal daily check-ins, sleep tracking, and confidential recovery tools. Cannot access other personnel records.
               </p>
-              <div className="pt-2 border-t border-stone-100 space-y-1 text-xs text-slate-500">
-                <div>&bull; Non-punitive intervention triage</div>
-                <div>&bull; What-If rotation schedule simulator</div>
-                <div>&bull; Clinical SOP guidance engine</div>
+              <div className="pt-2 border-t border-[#D2CBBB] space-y-1 text-[11px] text-[#5E5A52]">
+                <div className="text-[#0f7058] font-medium">&bull; 01 Personnel Portal (Self)</div>
+                <div className="text-[#5E5A52]/60">&bull; No command or clinical triage access</div>
               </div>
             </div>
-            <div className="pt-6">
+            <div className="pt-4">
               <button
-                onClick={() => onEnterDashboard('welfare_officer', 'wo-kumar')}
-                className="w-full py-2.5 px-4 rounded-full bg-orange-600 hover:bg-orange-700 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                onClick={() => onEnterDashboard('personnel', 'p-001')}
+                className="w-full py-2 px-3 rounded-full bg-[#1d9f76] hover:bg-[#0f7058] text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <span>Enter as Welfare Officer</span>
-                <ChevronRight className="w-4 h-4" />
+                <span>Authenticate Tier 1</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#efa02a]" />
               </button>
             </div>
           </div>
 
-          {/* Brigade Commander Card */}
-          <div className="bg-white rounded-3xl border border-stone-200/80 p-6 flex flex-col justify-between hover:border-stone-300 transition-all shadow-sm">
+          {/* Level 2: Welfare Officer */}
+          <div className="bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] p-5 flex flex-col justify-between hover:border-[#1d9f76] transition-all shadow-2xs">
             <div className="space-y-3">
-              <div className="w-10 h-10 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700">
-                <Layers className="w-5 h-5" />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#1d9f76]/15 text-[#0f7058] border border-[#1d9f76]/30">
+                  Tier 2 &bull; 2 Portals
+                </span>
+                <Activity className="w-4 h-4 text-[#0f7058]" />
               </div>
-              <h3 className="text-base font-bold text-slate-900">Brigade Commander</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Strategic oversight across active battalions, sector outposts, and strike regiments. Review circadian load and readiness velocity.
+              <div>
+                <h3 className="text-sm font-bold text-[#1E1E1E]">Welfare Officer</h3>
+                <div className="text-xs font-medium text-[#5E5A52]">Capt. (Dr.) Ananya Sen</div>
+              </div>
+              <p className="text-xs text-[#5E5A52] leading-relaxed">
+                Triage strain alerts, inspect TreeSHAP factor attributions, and issue restorative recovery recommendations.
               </p>
-              <div className="pt-2 border-t border-stone-100 space-y-1 text-xs text-slate-500">
-                <div>&bull; 4 WHO GDHM Strategic Health Pillars</div>
-                <div>&bull; Cryptographic k ≥ 10 privacy suppression</div>
-                <div>&bull; Printable Executive Intelligence Brief</div>
+              <div className="pt-2 border-t border-[#D2CBBB] space-y-1 text-[11px] text-[#5E5A52]">
+                <div className="text-[#0f7058] font-medium">&bull; 01 Personnel Portal</div>
+                <div className="text-[#0f7058] font-medium">&bull; 02 Welfare Officer Portal</div>
               </div>
             </div>
-            <div className="pt-6">
+            <div className="pt-4">
               <button
-                onClick={() => onEnterDashboard('command_viewer', 'cmd-singh')}
-                className="w-full py-2.5 px-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                onClick={() => onEnterDashboard('welfare_officer', 'wo-001')}
+                className="w-full py-2 px-3 rounded-full bg-[#0f7058] hover:bg-[#1d9f76] text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <span>Enter as Commander</span>
-                <ChevronRight className="w-4 h-4 text-orange-400" />
+                <span>Authenticate Tier 2</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#efa02a]" />
+              </button>
+            </div>
+          </div>
+
+          {/* Level 3: Commander */}
+          <div className="bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] p-5 flex flex-col justify-between hover:border-[#1d9f76] transition-all shadow-2xs">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#efa02a]/15 text-[#1E1E1E] border border-[#efa02a]/30">
+                  Tier 3 &bull; 3 Portals
+                </span>
+                <Layers className="w-4 h-4 text-[#efa02a]" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-[#1E1E1E]">Commanding Officer</h3>
+                <div className="text-xs font-medium text-[#5E5A52]">Col. Vikram Rawat</div>
+              </div>
+              <p className="text-xs text-[#5E5A52] leading-relaxed">
+                Macro unit readiness, deployment stress heatmaps, and executive intelligence briefs. Individual identities masked.
+              </p>
+              <div className="pt-2 border-t border-[#D2CBBB] space-y-1 text-[11px] text-[#5E5A52]">
+                <div className="text-[#0f7058] font-medium">&bull; 01 Personnel &bull; 02 Welfare</div>
+                <div className="text-[#0f7058] font-medium">&bull; 03 Commander Portal</div>
+              </div>
+            </div>
+            <div className="pt-4">
+              <button
+                onClick={() => onEnterDashboard('command_viewer', 'cmd-001')}
+                className="w-full py-2 px-3 rounded-full bg-[#1E1E1E] hover:bg-[#2E2E2E] text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Authenticate Tier 3</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#efa02a]" />
+              </button>
+            </div>
+          </div>
+
+          {/* Level 4: Admin / ML */}
+          <div className="bg-[#F4EFE4] rounded-2xl border border-[#D2CBBB] p-5 flex flex-col justify-between hover:border-[#1d9f76] transition-all shadow-2xs">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-stone-200 text-[#1E1E1E] border border-[#D2CBBB]">
+                  Tier 4 &bull; All 4 Portals
+                </span>
+                <Shield className="w-4 h-4 text-[#1E1E1E]" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-[#1E1E1E]">Systems Admin</h3>
+                <div className="text-xs font-medium text-[#5E5A52]">Maj. S. Iyer</div>
+              </div>
+              <p className="text-xs text-[#5E5A52] leading-relaxed">
+                Full model telemetry, dataset drift monitoring, cryptographic privacy audit, and system governance.
+              </p>
+              <div className="pt-2 border-t border-[#D2CBBB] space-y-1 text-[11px] text-[#5E5A52]">
+                <div className="text-[#0f7058] font-medium">&bull; Portals 01, 02, 03, 04</div>
+                <div className="text-[#0f7058] font-medium">&bull; Full Administrative Access</div>
+              </div>
+            </div>
+            <div className="pt-4">
+              <button
+                onClick={() => onEnterDashboard('admin', 'adm-001')}
+                className="w-full py-2 px-3 rounded-full bg-[#2E2E2E] hover:bg-[#1E1E1E] text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Authenticate Tier 4</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#efa02a]" />
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Reassuring Calm Banner Before Footer */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-slate-900 text-white mt-auto">
+      {/* Secure Credential Banner Before Footer */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 bg-[#1E1E1E] text-[#F4EFE4] mt-auto">
         <div className="max-w-4xl mx-auto text-center space-y-5">
-          <div className="w-12 h-12 rounded-3xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto text-orange-400">
-            <Shield className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-[#2E2E2E] border border-[#5E5A52] flex items-center justify-center mx-auto text-[#efa02a]">
+            <Lock className="w-6 h-6" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold font-serif tracking-tight">
-            Ready to experience dignified defense wellness?
+            Cryptographically Enforced Echelon Access
           </h2>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto leading-relaxed">
-            Create your personalized profile or jump into any role directly to explore the 7-screen intelligence suite.
+          <p className="text-xs sm:text-sm text-[#D2CBBB] max-w-xl mx-auto leading-relaxed">
+            Select your duty echelon on the login portal to review personal self-care, clinical welfare triage, or battalion readiness.
           </p>
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={() => setIsSignUpOpen(true)}
-              className="px-8 py-3 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2"
+              onClick={() => (onOpenLogin ? onOpenLogin() : onEnterDashboard('personnel', 'p-001'))}
+              className="px-8 py-3 rounded-full bg-[#1d9f76] hover:bg-[#0f7058] text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2"
             >
-              <span>Sign Up &amp; Enter Dashboard</span>
-              <ArrowRight className="w-4 h-4" />
+              <Lock className="w-4 h-4 text-[#efa02a]" />
+              <span>Go to 4-Echelon Login Screen</span>
             </button>
             <button
               onClick={() => setIsBreathingOpen(true)}
-              className="px-6 py-3 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs border border-slate-700 transition-all cursor-pointer flex items-center gap-2"
+              className="px-6 py-3 rounded-full bg-[#2E2E2E] hover:bg-[#3E3E3E] text-[#F4EFE4] font-semibold text-xs border border-[#5E5A52] transition-all cursor-pointer flex items-center gap-2"
             >
-              <Wind className="w-3.5 h-3.5 text-orange-400" />
-              <span>Try 1-Min Guided Breathing First</span>
+              <Wind className="w-3.5 h-3.5 text-[#efa02a]" />
+              <span>Practice 1-Minute Tactical Reset</span>
             </button>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-slate-500 py-6 px-4 sm:px-6 lg:px-8 border-t border-slate-900 text-center text-xs">
+      <footer className="bg-[#151515] text-[#A89F8F] py-6 px-4 sm:px-6 lg:px-8 border-t border-[#2E2E2E] text-center text-xs">
         <p>
-          SAHARA AI Welfare Intelligence System &bull; Armed Forces Health &amp; Welfare Directorate &bull; Compliant with Section 14 Privacy Directives &bull; WHO Global Digital Health Reporting Standards
+          SAHARA Defence Health Information System &bull; Directorate General of Armed Forces Medical Services &bull; Section 14 Medical Secrecy Certified &bull; WHO Global Digital Health Standards
         </p>
       </footer>
     </div>
