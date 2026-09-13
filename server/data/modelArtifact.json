@@ -1,0 +1,33 @@
+{
+  "model_name": "sahara_ridge_stress_forecaster",
+  "version": "1.0.4-synthetic",
+  "trained_at": "2026-09-10T12:00:00Z",
+  "dataset_provenance": "Synthetic Uniformed Force Cohort (200 individuals x 30 days, disjoint train/val/test splits)",
+  "features": [
+    "stress_lag_0",
+    "stress_lag_1",
+    "fatigue_lag_0",
+    "sleep_deficit_lag_0",
+    "duty_overtime_lag_0",
+    "consecutive_night_shifts"
+  ],
+  "coefficients": {
+    "stress_lag_0": 0.54,
+    "stress_lag_1": 0.18,
+    "fatigue_lag_0": 0.14,
+    "sleep_deficit_lag_0": 0.11,
+    "duty_overtime_lag_0": 0.08,
+    "consecutive_night_shifts": 0.06
+  },
+  "intercept": 0.22,
+  "scaling": {
+    "clip_min": 1.0,
+    "clip_max": 5.0
+  },
+  "benchmark_metrics": {
+    "synthetic_test_mae": 0.42,
+    "persistence_baseline_mae": 0.58,
+    "sample_count": 1800,
+    "notes": "Trained on synthetic demonstration data. Operational field validation pending authorized pilot."
+  }
+}
