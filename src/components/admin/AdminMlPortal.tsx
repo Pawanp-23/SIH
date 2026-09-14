@@ -33,10 +33,12 @@ import {
 
 interface AdminMlPortalProps {
   initialSubTab?: 'model_monitoring' | 'dataset_health' | 'drift' | 'accuracy' | 'feature_importance' | 'audit_logs' | 'permissions';
+  onOpenArchitecture?: () => void;
 }
 
 export const AdminMlPortal: React.FC<AdminMlPortalProps> = ({
-  initialSubTab = 'model_monitoring'
+  initialSubTab = 'model_monitoring',
+  onOpenArchitecture
 }) => {
   const [activeTab, setActiveTab] = useState<
     'model_monitoring' | 'dataset_health' | 'drift' | 'accuracy' | 'feature_importance' | 'audit_logs' | 'permissions'
@@ -111,6 +113,16 @@ export const AdminMlPortal: React.FC<AdminMlPortalProps> = ({
             <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-full bg-[#1d9f76]/20 text-[#0f7058] border border-[#1d9f76]/30">
               PSI = 0.042 (Normal)
             </span>
+            {onOpenArchitecture && (
+              <button
+                onClick={onOpenArchitecture}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#1d9f76] hover:bg-[#0f7058] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+                title="View Full SIH System Architecture & Data Flow Diagram"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>SIH Architecture Diagram</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

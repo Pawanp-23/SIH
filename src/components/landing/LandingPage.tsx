@@ -30,12 +30,14 @@ interface LandingPageProps {
   onEnterDashboard: (role?: UserRole, userId?: string) => void;
   onOpenTacticalReset: () => void;
   onOpenLogin?: () => void;
+  onOpenArchitecture?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onEnterDashboard,
   onOpenTacticalReset,
-  onOpenLogin
+  onOpenLogin,
+  onOpenArchitecture
 }) => {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isMethodologyOpen, setIsMethodologyOpen] = useState(false);
@@ -132,6 +134,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <span>WHO Standards</span>
             </button>
 
+            {onOpenArchitecture && (
+              <button
+                onClick={onOpenArchitecture}
+                className="hidden lg:flex items-center space-x-1.5 px-3.5 py-2 text-xs font-bold text-[#0f7058] hover:text-[#1d9f76] bg-[#1d9f76]/15 hover:bg-[#1d9f76]/25 border border-[#1d9f76]/30 rounded-full transition-all cursor-pointer shadow-2xs"
+                title="View SIH System Architecture & Data Flow Diagram"
+              >
+                <Layers className="w-3.5 h-3.5 text-[#0f7058]" />
+                <span>SIH Architecture</span>
+              </button>
+            )}
+
             <button
               id="btn-landing-login"
               onClick={() => (onOpenLogin ? onOpenLogin() : onEnterDashboard('personnel', 'p-001'))}
@@ -200,6 +213,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <UserCheck className="w-4 h-4 text-[#0f7058]" />
                 <span>Quick View: Constable Rahul Verma</span>
               </button>
+
+              {onOpenArchitecture && (
+                <button
+                  onClick={onOpenArchitecture}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-[#FAF8F5] hover:bg-[#E3DDCF] text-[#0f7058] font-bold text-sm border border-[#1d9f76]/30 shadow-2xs transition-all cursor-pointer flex items-center justify-center space-x-2"
+                >
+                  <Layers className="w-4 h-4 text-[#0f7058]" />
+                  <span>SIH Architecture Diagram</span>
+                </button>
+              )}
             </div>
           </div>
 

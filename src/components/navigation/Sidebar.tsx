@@ -48,6 +48,7 @@ interface SidebarProps {
   onOpenTacticalReset: () => void;
   onOpenWhoMethodology: () => void;
   onOpenExecutiveBrief: () => void;
+  onOpenArchitecture?: () => void;
   onOpenLandingPage: () => void;
   onOpenDemoGuide?: () => void;
 }
@@ -67,6 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenTacticalReset,
   onOpenWhoMethodology,
   onOpenExecutiveBrief,
+  onOpenArchitecture,
   onOpenLandingPage,
   onOpenDemoGuide
 }) => {
@@ -408,6 +410,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <FileText className="w-3.5 h-3.5 text-[#0f7058]" />
               <span>Executive Brief Dossier</span>
             </button>
+
+            {onOpenArchitecture && (
+              <button
+                onClick={onOpenArchitecture}
+                className="w-full text-left py-1.5 px-2.5 rounded-xl text-xs font-bold text-[#0f7058] bg-[#1d9f76]/10 hover:bg-[#1d9f76]/20 border border-[#1d9f76]/30 flex items-center space-x-2 transition-colors cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5 text-[#0f7058]" />
+                <span>SIH Architecture Diagram</span>
+              </button>
+            )}
 
             <button
               onClick={onOpenLandingPage}

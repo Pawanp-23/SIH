@@ -10,6 +10,7 @@ import { AdminMlPortal } from './components/admin/AdminMlPortal.js';
 import { TacticalResetModal } from './components/common/TacticalResetModal.js';
 import { WhoMethodologyModal } from './components/common/WhoMethodologyModal.js';
 import { ExecutiveBriefModal } from './components/common/ExecutiveBriefModal.js';
+import { SihArchitectureModal } from './components/common/SihArchitectureModal.js';
 import { LandingPage } from './components/landing/LandingPage.js';
 import { LoginPortal } from './components/auth/LoginPortal.js';
 import { Sparkles, X, PanelLeftOpen, ShieldCheck, Lock } from 'lucide-react';
@@ -44,6 +45,7 @@ export default function App() {
   const [isTacticalResetOpen, setIsTacticalResetOpen] = useState(false);
   const [isWhoMethodologyOpen, setIsWhoMethodologyOpen] = useState(false);
   const [isExecutiveBriefOpen, setIsExecutiveBriefOpen] = useState(false);
+  const [isArchitectureOpen, setIsArchitectureOpen] = useState(false);
   const [overviewData, setOverviewData] = useState<ForceWelfareOverview | null>(null);
 
   // 4 Role-Based Experiences Portals State
@@ -183,11 +185,18 @@ export default function App() {
   // If in System Overview mode, render the system documentation overview
   if (pageView === 'landing') {
     return (
-      <LandingPage
-        onEnterDashboard={handleEnterDashboard}
-        onOpenTacticalReset={() => setIsTacticalResetOpen(true)}
-        onOpenLogin={() => setPageView('login')}
-      />
+      <>
+        <LandingPage
+          onEnterDashboard={handleEnterDashboard}
+          onOpenTacticalReset={() => setIsTacticalResetOpen(true)}
+          onOpenLogin={() => setPageView('login')}
+          onOpenArchitecture={() => setIsArchitectureOpen(true)}
+        />
+        <SihArchitectureModal
+          isOpen={isArchitectureOpen}
+          onClose={() => setIsArchitectureOpen(false)}
+        />
+      </>
     );
   }
 
@@ -241,7 +250,12 @@ export default function App() {
           />
         );
       case 'admin':
-        return <AdminMlPortal initialSubTab={activeSubTab as any} />;
+        return (
+          <AdminMlPortal
+            initialSubTab={activeSubTab as any}
+            onOpenArchitecture={() => setIsArchitectureOpen(true)}
+          />
+        );
       default:
         return <PersonnelDashboard user={currentUser!} onRefreshUser={fetchSession} />;
     }
@@ -263,6 +277,10 @@ export default function App() {
         onClose={() => setIsExecutiveBriefOpen(false)}
         overview={overviewData}
       />
+      <SihArchitectureModal
+        isOpen={isArchitectureOpen}
+        onClose={() => setIsArchitectureOpen(false)}
+      />
 
       {/* Top Level Layout: Switchable Left Sidebar + Main App Viewport */}
       <div className="min-h-screen bg-[#e9e4d8] flex flex-row antialiased text-[#1E1E1E]">
@@ -282,6 +300,7 @@ export default function App() {
           onOpenTacticalReset={() => setIsTacticalResetOpen(true)}
           onOpenWhoMethodology={() => setIsWhoMethodologyOpen(true)}
           onOpenExecutiveBrief={() => setIsExecutiveBriefOpen(true)}
+          onOpenArchitecture={() => setIsArchitectureOpen(true)}
           onOpenLandingPage={() => setPageView('landing')}
         />
 
@@ -298,6 +317,7 @@ export default function App() {
             onOpenTacticalReset={() => setIsTacticalResetOpen(true)}
             onOpenWhoMethodology={() => setIsWhoMethodologyOpen(true)}
             onOpenExecutiveBrief={() => setIsExecutiveBriefOpen(true)}
+            onOpenArchitecture={() => setIsArchitectureOpen(true)}
             onOpenLandingPage={() => setPageView('landing')}
             onSignOut={handleSignOut}
             isSidebarCollapsed={isSidebarCollapsed}

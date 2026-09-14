@@ -13,7 +13,8 @@ import {
   ChevronDown,
   LogOut,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Layers
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -26,6 +27,7 @@ interface HeaderProps {
   onOpenTacticalReset?: () => void;
   onOpenWhoMethodology?: () => void;
   onOpenExecutiveBrief?: () => void;
+  onOpenArchitecture?: () => void;
   onOpenLandingPage?: () => void;
   onSignOut?: () => void;
   isSidebarCollapsed?: boolean;
@@ -42,6 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenTacticalReset,
   onOpenWhoMethodology,
   onOpenExecutiveBrief,
+  onOpenArchitecture,
   onOpenLandingPage,
   onSignOut,
   isSidebarCollapsed,
@@ -153,6 +156,20 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <FileText className="w-3.5 h-3.5 text-[#0f7058]" />
                 <span>Dossier</span>
+              </button>
+            )}
+
+            {/* SIH Architecture Diagram */}
+            {onOpenArchitecture && (
+              <button
+                id="btn-header-sih-architecture"
+                onClick={onOpenArchitecture}
+                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#1d9f76]/15 hover:bg-[#1d9f76]/25 text-[#0f7058] border border-[#1d9f76]/30 text-xs font-bold transition-colors cursor-pointer shadow-2xs"
+                title="View SIH Project Architecture & Data Flow Diagram"
+              >
+                <Layers className="w-3.5 h-3.5 text-[#0f7058]" />
+                <span className="hidden sm:inline">SIH Architecture</span>
+                <span className="sm:hidden">Diagram</span>
               </button>
             )}
 
